@@ -14,10 +14,11 @@ import numpy as np
 x = np.array([1.0, 3.0, 5.0])
 y = np.array([7.0, 2.0, 3.0])
 
-c = ez.Canvas()
-left, right = c.split_horizontally()
+canvas = ez.Canvas()
+left, right = canvas.split_horizontally()
 c = ez.Chart(left, caption='Title Chart1', margin=10)
 c.line(x, y)
+canvas.save('ezel.png')
 ```
 
 ## vs Matplotlib
