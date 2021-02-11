@@ -9,14 +9,14 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 pub struct Backend {
-    buffer: Vec<u8>,  // or String
+    pub buffer: Vec<u8>,  // or String
     pub inner: Rc<RefCell<BitMapBackend<'static>>>  // TODO: generalize to SVG and wasm
 }
 impl Backend {
     pub fn new(width: usize, height: usize) -> Self {
-        let mut buffer = vec![0;width*height];
-        // let inner = Rc::new(RefCell::new(BitMapBackend::with_buffer(unsafe{static_slice_mut(&mut buffer)}, (width as u32, height as u32))));
-        let inner = Rc::new(RefCell::new(BitMapBackend::new("ezel.png", (width as u32, height as u32))));
+        let mut buffer = vec![0;width*height*3];
+        let inner = Rc::new(RefCell::new(BitMapBackend::with_buffer(unsafe{static_slice_mut(&mut buffer)}, (width as u32, height as u32))));
+        // let inner = Rc::new(RefCell::new(BitMapBackend::new("ezel.png", (width as u32, height as u32))));
         Self {
             buffer,
             inner,

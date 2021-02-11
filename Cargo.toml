@@ -22,6 +22,7 @@ rustflags = [
 [dependencies]
 chrono = "0.4.19"
 flowutils = "0.1.0"
+image = "0.23.13"
 numpy = "0.13.0"
 plotters = "0.3.0"
 pyo3 = "0.13.1"
@@ -30,4 +31,4 @@ snafu = "0.6.10"
 
 [package.metadata.maturin]
 maintainer = "elbaro"
-project-url = ["https://github.com/elbaro/ezel"]
+project-url = { repository = "https://github.com/elbaro/ezel" }

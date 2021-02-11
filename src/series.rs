@@ -21,9 +21,9 @@ pub enum Series {
 }
 
 impl Series {
-    fn iter_f64(&self) {
-        todo!();
-    }
+    // fn iter_f64(&self) {
+    //     todo!();
+    // }
 }
 
 impl<'source> FromPyObject<'source> for Series {
@@ -47,8 +47,4 @@ impl<'source> FromPyObject<'source> for Series {
 
         Err(pyo3::exceptions::PyValueError::new_err("failed to convert sequence to series"))
     }
-}
-
-pub enum Series2D {
-    
 }

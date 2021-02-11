@@ -1,7 +1,10 @@
 # Ezel
 
-A fast Python plotting library written in Rust using [plotters](https://github.com/38/plotters).
+A Python plotting library written in Rust using [plotters](https://github.com/38/plotters).
 
+- fast
+- object-oriented API
+- no problem with >= 100_000 points
 
 ## Usage
 ```
@@ -44,9 +47,14 @@ y = np.random.randn(n)
 
 
 def draw_ezel():
-    c = ez.Canvas()
-    c = ez.Chart(c, x_range=ez.Range.f64(-10,10), y_range=ez.Range.f64(-10,10), caption='Title Chart1', margin=10)
+    canvas = ez.Canvas()
+    c = ez.Chart(canvas,
+                 x_range=ez.Range.f64(-10,10),
+                 y_range=ez.Range.f64(-10,10),
+                 caption='Title Chart1',
+                 margin=10)
     c.line(x, y)
+    canvas.save('ezel.png')
 
 
 def draw_matplotlib():

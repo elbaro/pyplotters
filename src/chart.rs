@@ -56,9 +56,4 @@ impl Chart {
         self.inner.draw_series(LineSeries::new(x.zip(y),&GREEN)).unwrap();
         Ok(())
     }
-
-    pub fn save(&self, path: &str) {
-        todo!();
-        // self.inner.save
-    }
 }

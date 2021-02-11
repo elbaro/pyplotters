@@ -8,6 +8,7 @@ use crate::backend::Backend;
 
 #[pyclass(unsendable)]
 pub struct Canvas {
+    is_root: bool,
     backend: Arc<Backend>,  // this is shared by all canvas from the same root canvas
     pub area: DrawingArea<BitMapBackend<'static>, Shift>,  // self-reference backend
 }
@@ -23,6 +24,7 @@ impl Canvas {
         let area: DrawingArea<_,_> = (&backend.inner).into();
         area.fill(&WHITE).unwrap();
         Self {
+            is_root: true,
             backend,
             area,
         }
@@ -32,15 +34,25 @@ impl Canvas {
     /// the original canvas can be still used.
     pub fn split_horizontally(&self, pixel: u32) -> (Self, Self) {
         let (a1, a2) = self.area.split_horizontally(pixel);
-        (Self{backend:self.backend.clone(), area: a1},
-        Self{backend:self.backend.clone(), area: a2})
+        (Self{is_root:false, backend:self.backend.clone(), area: a1},
+        Self{is_root:false, backend:self.backend.clone(), area: a2})
     }
 
     /// split the canvas vertically.
     /// the original canvas can be still used.
     pub fn split_vertically(&self, pixel: u32) -> (Self, Self) {
         let (a1, a2) = self.area.split_vertically(pixel);
-        (Self{backend:self.backend.clone(), area: a1},
-        Self{backend:self.backend.clone(), area: a2})
+        (Self{is_root:false, backend:self.backend.clone(), area: a1},
+        Self{is_root:false, backend:self.backend.clone(), area: a2})
+    }
+
+    pub fn save(&self, path: &str) -> PyResult<()> {
+        if !self.is_root {
+            return Err(pyo3::exceptions::PyValueError::new_err("only root canvas can save"));
+        }
+        let (w,h) = self.backend.inner.borrow().get_size();
+        image::save_buffer(path, &self.backend.buffer, w, h, image::ColorType::Rgb8).unwrap();
+        // self.inner.save
+        Ok(())
     }
 }
