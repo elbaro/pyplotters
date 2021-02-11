@@ -14,6 +14,14 @@ You need `libfontconfig` and `libfreetype`.
 pip install ezel
 ```
 
+or
+
+```
+git clone https://github.com/elbaro/ezel.git
+cd ezel
+pip install .
+```
+
 ## Usage
 ```
 import ezel as ez
