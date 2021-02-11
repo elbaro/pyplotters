@@ -1,0 +1,33 @@
+[package]
+name = "ezel"
+version = "0.1.0"
+authors = ["elbaro <elbaro@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[features]
+extension-module = ["pyo3/extension-module"]
+default = ["extension-module"]
+
+[target.x86_64-apple-darwin]
+rustflags = [
+  "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup",
+]
+
+[dependencies]
+chrono = "0.4.19"
+flowutils = "0.1.0"
+numpy = "0.13.0"
+plotters = "0.3.0"
+pyo3 = "0.13.1"
+pyo3-chrono = "0.1.0"
+snafu = "0.6.10"
+
+[package.metadata.maturin]
+maintainer = "elbaro"
+project-url = ["https://github.com/elbaro/ezel"]
