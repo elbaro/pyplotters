@@ -30,8 +30,8 @@ canvas.save('ezel.png')
 
 This is not a fair comparison but gives you a sense of how they handle large dataset.
 
-![](screenshots/ezel.png | width=300)
-![](screenshots/matplotlib.png | width=300)
+<img src="https://github.com/elbaro/ezel/raw/main/screenshots/ezel.png" class="galleryItem" width=300px />
+<img src="https://github.com/elbaro/ezel/raw/main/screenshots/matplotlib.png" class="galleryItem" width=300px />
 
 
 ```
