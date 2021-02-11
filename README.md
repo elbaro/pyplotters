@@ -19,15 +19,15 @@ c.line(x, y)
 
 ## vs Matplotlib
 
-|            | n=100*100            | n=1000*1000                                                 |   |   |
-|------------|----------------------|-------------------------------------------------------------|---|---|
-| ezel       | 0.030641794204711914 | 1.2414026260375977                                          |   |   |
-| matplotlib | 0.4168715476989746   | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |   |   |
+|            | n=100*100            | n=1000*1000                                                 |
+|------------|----------------------|-------------------------------------------------------------|
+| ezel       | 0.030641794204711914 | 1.2414026260375977                                          |
+| matplotlib | 0.4168715476989746   | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |
 
 This is not a fair comparison but gives you a sense of how they handle large dataset.
 
-![](screenshots/ezel.png)
-![](screenshots/matplotlib.png)
+![](screenshots/ezel.png | width=300)
+![](screenshots/matplotlib.png | width=300)
 
 
 ```
@@ -68,19 +68,21 @@ draw_matplotlib()
 print(time.time() - t)
 ```
 
-## Roadmap
+## Roadmap for 0.1.x
 Currently only `line(x=(f64 ndarray), y=(f64 ndarray))` is supported.
 
 - [ ] Draw x, y axis and grid by default
 - [ ] Accept a Python list as an argument
-- [ ] Accept i32, i64, f32 as arguments (with internal conversion)
+- [ ] Accept i32, i64, f32 as arguments (by converting to f64)
 - [ ] Add .scatter()
 - [ ] Support a datetime
 - [ ] line, scatter style customization
 - [ ] auto color rotation
 - [ ] Title font customization
+- [ ] Histogram
 
 ## Roadmap for 0.2
 - [ ] Support other backends such as SVG and wasm
 - [ ] Add `xy=` which accepts a sequence of xy pairs.
-# ezel
+- [ ] Log-scale on x, y axis
+- [ ] Draw i32, i64, f32 data without converting to f64
