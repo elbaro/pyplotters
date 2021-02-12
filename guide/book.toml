@@ -1,0 +1,6 @@
+[book]
+authors = ["elbaro"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Ezel Guide"
