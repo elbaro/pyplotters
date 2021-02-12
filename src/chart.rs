@@ -71,7 +71,7 @@ impl Chart {
     ) -> PyResult<()> {
         let mut mesh = self.inner.configure_mesh();
         if let Some(s) = x_text { mesh.x_desc(s); }
-        if let Some(s) = y_text { mesh.x_desc(s); }
+        if let Some(s) = y_text { mesh.y_desc(s); }
         mesh.draw().unwrap();
         Ok(())
     }
