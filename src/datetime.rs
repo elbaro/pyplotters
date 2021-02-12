@@ -3,7 +3,7 @@ use crate::Series;
 
 #[pyclass]
 pub struct DateTime {
-    vec: Vec<chrono::NaiveDateTime>,
+    pub vec: Vec<chrono::NaiveDateTime>,
 }
 
 impl DateTime {

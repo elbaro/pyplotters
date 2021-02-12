@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use crate::Dtype;
 
 /// Range represents a start and end.
 /// It has no concept such as step or log scale.
@@ -7,6 +8,20 @@ use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 #[derive(Clone, Copy)]
 pub struct Range {
     pub range: RangeEnum
+}
+
+impl Range {
+    pub fn dtype(&self) -> Dtype {
+        match self.range {
+            RangeEnum::I64(..) => Dtype::I64,
+            RangeEnum::I32(..) => Dtype::I32,
+            RangeEnum::F64(..) => Dtype::F64,
+            RangeEnum::F32(..) => Dtype::F32,
+            RangeEnum::DateTime(..) => Dtype::NavieDateTime,
+            RangeEnum::Date(..) => Dtype::NaiveDate,
+            RangeEnum::Time(..) => Dtype::NaiveTime,
+        }
+    }
 }
 
 #[pymethods]

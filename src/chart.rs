@@ -3,6 +3,7 @@ use plotters::coord::types::{RangedCoordf64};
 use pyo3::prelude::*;
 use crate::Canvas;
 use crate::Series;
+use crate::Dtype;
 use crate::range::{Range, RangeEnum};
 use crate::hack::static_reference;
 
@@ -12,6 +13,8 @@ pub struct Chart {
     _canvas: Py<Canvas>,  // Why Py<Canvas>? Since canvas is exposed to user, Python object around Canvas shouldn't be destroyed.
     inner: ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedCoordf64, RangedCoordf64>>,
     color_index: usize,
+    x_dtype: Dtype,
+    y_dtype: Dtype,
 }
 
 impl Chart {
@@ -37,20 +40,31 @@ impl Chart {
         if let Some(v) = caption { b.caption(v, ("sans-serif", 20)); }
         drop(canvas);
 
+        let x_dtype = x_range.dtype();
+        let y_dtype = y_range.dtype();
         let x_range = flowutils::unwrap_pattern!(x_range.range, RangeEnum::F64(a,b) => (a..b));
         let y_range = flowutils::unwrap_pattern!(y_range.range, RangeEnum::F64(a,b) => (a..b));
         Ok(Self {
             _canvas: py_canvas,
             inner: b.build_cartesian_2d(x_range, y_range).unwrap(),
             color_index: 0,
+            x_dtype,
+            y_dtype,
         })
     }
     
-    /// 
     pub fn line(&mut self, py: Python, x: Series, y: Series) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
         let color = self.next_color().filled();
-        self.inner.draw_series(LineSeries::new(x.iter_f64(py).zip(y.iter_f64(py)),color)).unwrap();
+
+        if self.x_dtype.is_numeric() & self.y_dtype.is_numeric() {
+            self.inner.draw_series(LineSeries::new(x.iter_f64(py).zip(y.iter_f64(py)),color)).unwrap();
+        } else if self.x_dtype.is_datetime() && self.y_dtype.is_numeric(){
+            self.inner.draw_series(LineSeries::new(x.iter_datetime(py).zip(y.iter_f64(py)),color)).unwrap();
+        } else {
+            unreachable!();
+        }
+        
         Ok(())
     }
 

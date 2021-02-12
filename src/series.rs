@@ -71,10 +71,39 @@ impl Series {
             Series::EzelDateTime(_) => unreachable!(),
         }
     }
+    pub fn iter_datetime<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=chrono::NaiveDateTime> + 'out> {
+        match self {
+            // let x = x.as_ref(py);
+        // let x = x.iter().map(|pyany| pyany.extract::<f64>().unwrap());
+            Series::List{dtype:_, list: x,..} => {
+                unreachable!()
+                // Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<i64>().unwrap()))
+            },
+            Series::NumpyF64(x) => unreachable!(),
+            Series::NumpyF32(x) => unreachable!(),
+            Series::NumpyI64(x) => unreachable!(),
+            Series::NumpyI32(x) => unreachable!(),
+            Series::EzelDateTime(dt) => {
+                let dt = dt.borrow(py);
+                Box::new(dt.vec.iter().cloned())
+            }
+        }
+    }
 }
+
+// enum IterDateTime {
+//     PyList()
+// }
+
+// impl Iterator for IterDateTime {
+
+// }
+
 impl<'source> FromPyObject<'source> for Series {
     fn extract(x: &'source PyAny) -> PyResult<Self> {
         if let Ok(arr) = x.extract::<&PyList>() {
+            // infer dtype from PyList
+
             return Ok(Series::List{dtype: Dtype::F64, list: arr.into()});
         }
         if let Ok(arr) = x.extract::<&PyArray1<f64>>() {
