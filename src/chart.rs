@@ -1,17 +1,15 @@
 use plotters::prelude::*;
 use plotters::coord::types::{RangedCoordf64};
 use pyo3::prelude::*;
-use crate::canvas::Canvas;
-use crate::series::Series;
+use crate::Canvas;
+use crate::Series;
 use crate::range::{Range, RangeEnum};
 use crate::hack::static_reference;
-use pyo3::types::PyList;
-use numpy::array::PyArray1;
 
 
 #[pyclass(unsendable)]
 pub struct Chart {
-    canvas: Py<Canvas>,  // Why Py<Canvas>? Since canvas is exposed to user, Python object around Canvas shouldn't be destroyed.
+    _canvas: Py<Canvas>,  // Why Py<Canvas>? Since canvas is exposed to user, Python object around Canvas shouldn't be destroyed.
     inner: ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedCoordf64, RangedCoordf64>>,
 }
 
@@ -31,7 +29,7 @@ impl Chart {
         let x_range = flowutils::unwrap_pattern!(x_range.range, RangeEnum::F64(a,b) => (a..b));
         let y_range = flowutils::unwrap_pattern!(y_range.range, RangeEnum::F64(a,b) => (a..b));
         Ok(Self {
-            canvas: py_canvas,
+            _canvas: py_canvas,
             inner: b.build_cartesian_2d(x_range, y_range).unwrap(),
         })
     }
@@ -39,21 +37,29 @@ impl Chart {
     
     /// 
     pub fn line(&mut self, py: Python, x: Series, y: Series) -> PyResult<()> {
-        // let x: Py<PyList> = flowutils::unwrap_pattern!(x, Series::List(list) => list);
-        // let x = x.as_ref(py);
-        // let x = x.iter().map(|pyany| pyany.extract::<f64>().unwrap());
-        // let y: Py<PyList> = flowutils::unwrap_pattern!(y, Series::List(list) => list);
-        // let y = y.as_ref(py);
-        // let y = y.iter().map(|pyany| pyany.extract::<f64>().unwrap());
+        assert!(x.len(py) == y.len(py));
+        self.inner.draw_series(LineSeries::new(x.iter_f64(py).zip(y.iter_f64(py)),&GREEN)).unwrap();
+        Ok(())
+    }
 
-        let x: Py<PyArray1<f64>> = flowutils::unwrap_pattern!(x, Series::NumpyF64(arr) => arr);
-        let x = x.as_ref(py);
-        let x = x.iter().unwrap().map(|x| *x);
-        let y: Py<PyArray1<f64>> = flowutils::unwrap_pattern!(y, Series::NumpyF64(arr) => arr);
-        let y = y.as_ref(py);
-        let y = y.iter().unwrap().map(|y| *y);
+    pub fn scatter(&mut self, py: Python, x: Series, y: Series, size: Option<u32>) -> PyResult<()> {
+        assert!(x.len(py) == y.len(py));
+        let size = size.unwrap_or(3);
+        
+        self.inner.draw_series(x.iter_f64(py).zip(y.iter_f64(py)).map(|(x,y)| {
+            Circle::new((x,y),size,BLUE.filled())
+        })).unwrap();
+        Ok(())
+    }
 
-        self.inner.draw_series(LineSeries::new(x.zip(y),&GREEN)).unwrap();
+    pub fn mesh(&mut self,
+        x_text: Option<String>,
+        y_text: Option<String>,
+    ) -> PyResult<()> {
+        let mut mesh = self.inner.configure_mesh();
+        if let Some(s) = x_text { mesh.x_desc(s); }
+        if let Some(s) = y_text { mesh.x_desc(s); }
+        mesh.draw().unwrap();
         Ok(())
     }
 }

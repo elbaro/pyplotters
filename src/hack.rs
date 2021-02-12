@@ -9,9 +9,9 @@ pub unsafe fn static_reference<'a, T>(x: &'a T) -> &'static T{
 }
 
 
-pub unsafe fn static_reference_mut<'a, T>(x: &'a mut T) -> &'static mut T{
-    std::mem::transmute::<_, _>(x)
-}
+// pub unsafe fn static_reference_mut<'a, T>(x: &'a mut T) -> &'static mut T{
+//     std::mem::transmute::<_, _>(x)
+// }
 
 pub unsafe fn static_slice_mut<'a, T>(x: &'a mut [T]) -> &'static mut [T] {
     std::mem::transmute::<_, _>(x)

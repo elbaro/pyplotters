@@ -8,7 +8,10 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 
 ## Install
 
-You need `libfontconfig` and `libfreetype`.
+You need
+- rust
+- libfontconfig
+- libfreetype
 
 ```
 pip install ezel
@@ -97,17 +100,19 @@ print(time.time() - t)
 Currently only `line(x=(f64 ndarray), y=(f64 ndarray))` is supported.
 
 - [ ] Draw x, y axis and grid by default
-- [ ] Accept a Python list as an argument
-- [ ] Accept i32, i64, f32 as arguments (by converting to f64)
-- [ ] Add .scatter()
+- [x] Accept a Python list as an argument
+- [x] Accept i32, i64, f32 as arguments (by converting to f64)
+- [x] Add .scatter()
 - [ ] Support a datetime
 - [ ] line, scatter style customization
 - [ ] auto color rotation
 - [ ] Title font customization
 - [ ] Histogram
+- [ ] Static Build
 
-## Roadmap for 0.2
+## Roadmap for 0.2.0
 - [ ] Support other backends such as SVG and wasm
 - [ ] Add `xy=` which accepts a sequence of xy pairs.
 - [ ] Log-scale on x, y axis
 - [ ] Draw i32, i64, f32 data without converting to f64
+- [ ] Support Pandas/PyPolars DataFrames/Series

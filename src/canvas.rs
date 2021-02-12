@@ -4,7 +4,7 @@ use plotters::prelude::*;
 // use plotters::coord::types::RangedCoordf64;
 use plotters::coord::Shift;
 use std::sync::Arc;
-use crate::backend::Backend;
+use crate::Backend;
 
 #[pyclass(unsendable)]
 pub struct Canvas {
