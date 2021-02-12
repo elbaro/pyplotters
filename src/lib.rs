@@ -5,6 +5,7 @@ mod chart;
 mod range;
 mod series;
 mod dtype;
+mod datetime;
 
 use backend::Backend;
 use canvas::Canvas;
@@ -12,6 +13,7 @@ use chart::Chart;
 use range::Range;
 use series::Series;
 use dtype::Dtype;
+use datetime::DateTime;
 
 use pyo3::prelude::*;
 
@@ -25,6 +27,7 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Canvas>()?;
     m.add_class::<Chart>()?;
     m.add_class::<Range>()?;
+    m.add_class::<DateTime>()?;
     Ok(())
 }
 

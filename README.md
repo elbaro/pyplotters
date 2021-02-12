@@ -6,6 +6,10 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 - object-oriented API
 - no problem with >= 100_000 points
 
+- [Guide]()
+- [API Reference]()
+- [Benchmarks]
+
 ## Install
 
 You need
@@ -97,15 +101,15 @@ print(time.time() - t)
 ```
 
 ## Roadmap for 0.1.x
-Currently only `line(x=(f64 ndarray), y=(f64 ndarray))` is supported.
+Currently only numeric scalars are supported.
 
 - [ ] Draw x, y axis and grid by default
 - [x] Accept a Python list as an argument
 - [x] Accept i32, i64, f32 as arguments (by converting to f64)
 - [x] Add .scatter()
-- [ ] Support a datetime
+- [ ] Support datetime, date, time
 - [ ] line, scatter style customization
-- [ ] auto color rotation
+- [x] auto color rotation
 - [ ] Title font customization
 - [ ] Histogram
 - [ ] Static Build

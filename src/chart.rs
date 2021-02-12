@@ -11,6 +11,17 @@ use crate::hack::static_reference;
 pub struct Chart {
     _canvas: Py<Canvas>,  // Why Py<Canvas>? Since canvas is exposed to user, Python object around Canvas shouldn't be destroyed.
     inner: ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedCoordf64, RangedCoordf64>>,
+    color_index: usize,
+}
+
+impl Chart {
+    fn next_color(&mut self) -> PaletteColor<Palette9999> {
+        self.color_index += 1;
+        if PaletteColor::<Palette9999>::pick(self.color_index).rgb() == (255, 255, 255) {
+            self.color_index += 1;
+        }
+        PaletteColor::<Palette9999>::pick(self.color_index)
+    }
 }
 
 #[pymethods]
@@ -31,14 +42,15 @@ impl Chart {
         Ok(Self {
             _canvas: py_canvas,
             inner: b.build_cartesian_2d(x_range, y_range).unwrap(),
+            color_index: 0,
         })
     }
-
     
     /// 
     pub fn line(&mut self, py: Python, x: Series, y: Series) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
-        self.inner.draw_series(LineSeries::new(x.iter_f64(py).zip(y.iter_f64(py)),&GREEN)).unwrap();
+        let color = self.next_color().filled();
+        self.inner.draw_series(LineSeries::new(x.iter_f64(py).zip(y.iter_f64(py)),color)).unwrap();
         Ok(())
     }
 
@@ -46,8 +58,9 @@ impl Chart {
         assert!(x.len(py) == y.len(py));
         let size = size.unwrap_or(3);
         
+        let color = self.next_color().filled();
         self.inner.draw_series(x.iter_f64(py).zip(y.iter_f64(py)).map(|(x,y)| {
-            Circle::new((x,y),size,BLUE.filled())
+            Circle::new((x,y),size,color.clone())
         })).unwrap();
         Ok(())
     }
