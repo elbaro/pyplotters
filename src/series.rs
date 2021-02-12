@@ -7,8 +7,11 @@
 //!    x=range(5,7),              // this is Series::range
 //!    y=np.array([1.0,2.0,3.0])  // this is Series::numpy
 //! )
+use std::collections::binary_heap::Iter;
+
 use crate::Dtype;
 use crate::DateTime as EzelDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 use pyo3::prelude::*;
 use pyo3::types::PyList;
 use numpy::array::PyArray1;
@@ -30,7 +33,7 @@ impl Series {
             Series::NumpyF32(..) => Dtype::F32,
             Series::NumpyI64(..) => Dtype::I64,
             Series::NumpyI32(..) => Dtype::I32,
-            Series::EzelDateTime(..) => Dtype::NavieDateTime,
+            Series::EzelDateTime(..) => Dtype::NaiveDateTime,
         }
     }
     pub fn len(&self, py: Python) -> usize {
@@ -79,32 +82,53 @@ impl Series {
                 unreachable!()
                 // Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<i64>().unwrap()))
             },
-            Series::NumpyF64(x) => unreachable!(),
-            Series::NumpyF32(x) => unreachable!(),
-            Series::NumpyI64(x) => unreachable!(),
-            Series::NumpyI32(x) => unreachable!(),
+            Series::NumpyF64(..) => unreachable!(),
+            Series::NumpyF32(..) => unreachable!(),
+            Series::NumpyI64(..) => unreachable!(),
+            Series::NumpyI32(..) => unreachable!(),
             Series::EzelDateTime(dt) => {
                 let dt = dt.borrow(py);
-                Box::new(dt.vec.iter().cloned())
+                Box::new(IterDateTime::new(dt))
             }
         }
     }
 }
 
-// enum IterDateTime {
-//     PyList()
-// }
+pub struct IterDateTime<'py> {
+    dt: PyRef<'py, EzelDateTime>,
+    idx: usize,
+}
 
-// impl Iterator for IterDateTime {
+impl<'py> IterDateTime<'py> {
+    pub fn new(dt: PyRef<'py, EzelDateTime>) -> Self {
+        Self {
+            dt,
+            idx: 0,
+        }
+    }
+}
 
-// }
+impl<'py> Iterator for IterDateTime<'py> {
+    type Item = chrono::NaiveDateTime;
+    fn next(&mut self) -> Option<Self::Item> {
+        let idx = self.idx;
+        self.idx += 1;
+        self.dt.vec.get(idx).map(|v| *v)
+    }
+}
 
 impl<'source> FromPyObject<'source> for Series {
     fn extract(x: &'source PyAny) -> PyResult<Self> {
         if let Ok(arr) = x.extract::<&PyList>() {
             // infer dtype from PyList
-
-            return Ok(Series::List{dtype: Dtype::F64, list: arr.into()});
+            if arr.iter().all(|pyany| pyany.extract::<i64>().is_ok()) {
+                return Ok(Series::List{dtype: Dtype::I64, list: arr.into()});
+            } else if arr.iter().all(|pyany| pyany.extract::<f64>().is_ok()){
+                return Ok(Series::List{dtype: Dtype::F64, list: arr.into()});
+            } else {
+                todo!()
+            }
+            
         }
         if let Ok(arr) = x.extract::<&PyArray1<f64>>() {
             return Ok(Series::NumpyF64(arr.to_owned()));

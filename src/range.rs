@@ -17,7 +17,7 @@ impl Range {
             RangeEnum::I32(..) => Dtype::I32,
             RangeEnum::F64(..) => Dtype::F64,
             RangeEnum::F32(..) => Dtype::F32,
-            RangeEnum::DateTime(..) => Dtype::NavieDateTime,
+            RangeEnum::DateTime(..) => Dtype::NaiveDateTime,
             RangeEnum::Date(..) => Dtype::NaiveDate,
             RangeEnum::Time(..) => Dtype::NaiveTime,
         }
