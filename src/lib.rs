@@ -6,6 +6,7 @@ mod range;
 mod series;
 mod dtype;
 mod datetime;
+mod mesh;
 
 use backend::Backend;
 use canvas::Canvas;
@@ -14,6 +15,7 @@ use range::Range;
 use series::Series;
 use dtype::Dtype;
 use datetime::DateTime;
+use mesh::Mesh;
 
 use pyo3::prelude::*;
 

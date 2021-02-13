@@ -6,6 +6,7 @@ use crate::Series;
 use crate::Dtype;
 use crate::range::{Range, RangeEnum};
 use crate::hack::static_reference;
+use crate::Mesh;
 
 
 enum TypedChart {
@@ -35,15 +36,20 @@ impl Chart {
 #[pymethods]
 impl Chart {
     #[new]
-    pub fn new(py: Python, py_canvas: Py<Canvas>, x_range: Py<Range>, y_range: Py<Range>, margin: Option<i32>, label_area: Option<i32>, caption: Option<String>) -> PyResult<Self> {
+    pub fn new(
+            py: Python,
+            canvas: Py<Canvas>,
+            x_range: Py<Range>, y_range: Py<Range>, margin: Option<i32>, label_area: Option<i32>, caption: Option<String>,
+            mesh: Option<bool>) -> PyResult<Self> {
         let x_range = x_range.borrow(py);
         let y_range = y_range.borrow(py);
-        let canvas = py_canvas.borrow_mut(py);
-        let mut b = ChartBuilder::on(unsafe{static_reference(&canvas.area)});
+        let canvas_ref = canvas.borrow_mut(py);
+        let mesh = mesh.unwrap_or(true);
+        let mut b = ChartBuilder::on(unsafe{static_reference(&canvas_ref.area)});
         if let Some(v) = margin { b.margin(v);  }
         if let Some(v) = label_area { b.set_all_label_area_size(v); }
         if let Some(v) = caption { b.caption(v, ("sans-serif", 20)); }
-        drop(canvas);
+        drop(canvas_ref);
 
         let x_dtype = x_range.dtype();
         let y_dtype = y_range.dtype();
@@ -52,17 +58,36 @@ impl Chart {
             (Dtype::F64, Dtype::F64) => {
                 let x_range = flowutils::unwrap_pattern!(x_range.range, RangeEnum::F64(a,b) => (a..b));
                 let y_range = flowutils::unwrap_pattern!(y_range.range, RangeEnum::F64(a,b) => (a..b));
-                TypedChart::F64F64(b.build_cartesian_2d(x_range, y_range).unwrap())
+                if mesh {
+                    if label_area.is_none() {
+                        b.set_all_label_area_size(100);
+                    }
+                }
+                let mut chart = b.build_cartesian_2d(x_range, y_range).unwrap();
+                if mesh {
+                    chart.configure_mesh().draw().unwrap();
+                }
+                
+                TypedChart::F64F64(chart)
             }
             (Dtype::NaiveDateTime, Dtype::F64) => {
                 let x_range: RangedDateTime<chrono::NaiveDateTime> = flowutils::unwrap_pattern!(x_range.range, RangeEnum::DateTime(a,b) => (a..b)).into();
                 let y_range = flowutils::unwrap_pattern!(y_range.range, RangeEnum::F64(a,b) => (a..b));
-                TypedChart::DateTimeF64(b.build_cartesian_2d(x_range, y_range).unwrap())
+                if mesh {
+                    if label_area.is_none() {
+                        b.set_all_label_area_size(100);
+                    }
+                }
+                let mut chart = b.build_cartesian_2d(x_range, y_range).unwrap();
+                if mesh {
+                    chart.configure_mesh().draw().unwrap();
+                }
+                TypedChart::DateTimeF64(chart)
             }
             _ => unreachable!()
         };
         Ok(Self {
-            _canvas: py_canvas,
+            _canvas: canvas,
             inner,
             color_index: 0,
             x_dtype,
