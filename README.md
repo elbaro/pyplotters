@@ -103,11 +103,13 @@ print(time.time() - t)
 ## Roadmap for 0.1.x
 Currently only numeric scalars are supported.
 
-- [ ] Draw x, y axis and grid by default
+- [x] Draw x, y axis and grid by default
 - [x] Accept a Python list as an argument
 - [x] Accept i32, i64, f32 as arguments (by converting to f64)
 - [x] Add .scatter()
-- [ ] Support datetime, date, time
+- [x] Support datetime
+- [ ] Support date
+- [ ] Support time
 - [ ] line, scatter style customization
 - [x] auto color rotation
 - [ ] Title font customization
