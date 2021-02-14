@@ -12,48 +12,15 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 - [API Reference](#)
 - [Benchmarks](#)
 
-## Install
-
-You need
-- rust
-- libfontconfig
-- libfreetype
-
-```
-pip install ezel
-```
-
-or
-
-```
-git clone https://github.com/elbaro/ezel.git
-cd ezel
-pip install .
-```
-
-## Usage
-```
-import ezel as ez
-import numpy as np
-
-x = np.array([1.0, 3.0, 5.0])
-y = np.array([7.0, 2.0, 3.0])
-
-canvas = ez.Canvas()
-left, right = canvas.split_horizontally()
-c = ez.Chart(left, caption='Title Chart1', margin=10)
-c.line(x, y)
-canvas.save('ezel.png')
-```
-
 ## vs Matplotlib
 
-|            | n = 10,000           | n = 1,000,000                                               |
-|------------|----------------------|-------------------------------------------------------------|
-| ezel       | 0.030641794204711914 | 1.5611903667449951                                          |
-| matplotlib | 0.4168715476989746   | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |
+|                      | n = 10,000 | n = 100,000 | n = 1,000,000                                               | n = 10,000,000 |
+|----------------------|--------------------------|-------------------------------------------------------------| -------------- |
+| ezel                 | 0.043949   | 0.179385    | 1.561190                                                    | 15.397686      |
+| matplotlib           | 0.416871   | 3.159303    | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |                |
+| matplotlib (GTK3agg) | 0.414843   | 1.723030    | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |                |
 
-This is not a fair comparison but gives you a sense of how they handle large dataset.
+This may not be a fair comparison but gives you a sense of how they handle large dataset.
 
 <img src="https://github.com/elbaro/ezel/raw/main/screenshots/ezel.png" class="galleryItem" width=300px /><img src="https://github.com/elbaro/ezel/raw/main/screenshots/matplotlib.png" class="galleryItem" width=300px />
 left: Ezel with n=1,000,000
@@ -67,8 +34,8 @@ from matplotlib import pyplot as plt
 
 import ezel as ez
 
-n = 1000*1000
-x = np.random.randn(n)
+n = 1000*10
+x = np.random.randn(n)  # clipping didn't improve matplotlib
 y = np.random.randn(n)
 
 
@@ -102,6 +69,41 @@ draw_matplotlib()
 print(time.time() - t)
 ```
 
+## Install
+
+Prerequisites:
+- rust
+- libfontconfig
+- libfreetype
+
+```
+pip install ezel
+```
+
+or
+
+```
+git clone https://github.com/elbaro/ezel.git
+cd ezel
+pip install .
+```
+
+## Usage
+```
+import ezel as ez
+import numpy as np
+
+x = np.array([1.0, 3.0, 5.0])
+y = np.array([7.0, 2.0, 3.0])
+
+canvas = ez.Canvas()
+left, right = canvas.split_horizontally()
+c = ez.Chart(left, caption='Title Chart1', margin=10)
+c.line(x, y)
+canvas.save('ezel.png')
+```
+
+
 ## Roadmap for 0.1.x
 Currently only numeric scalars are supported.
 
@@ -129,3 +131,4 @@ Currently only numeric scalars are supported.
 - [ ] Draw i32, i64, f32 data without converting to f64
 - [ ] Support Pandas/PyPolars DataFrames/Series
 - [ ] Static Build
+- [ ] Jupyter Notebook Intergration
