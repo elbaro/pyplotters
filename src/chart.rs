@@ -1,3 +1,4 @@
+use numpy::ShapeError;
 use plotters::prelude::*;
 use plotters::coord::types::{RangedCoordf64, RangedDateTime};
 use pyo3::prelude::*;
@@ -92,7 +93,7 @@ impl Chart {
 
         // user specified no margin at all
         if margin.is_none() && margin_left.is_none() && margin_right.is_none() && margin_top.is_none() && margin_bottom.is_none() {
-            b.margin_left(20);
+            b.margin_left(20);  // TODO: change to percentage
             b.margin_right(20);
             b.margin_top(20);
             b.margin_bottom(20);
@@ -185,9 +186,10 @@ impl Chart {
         })
     }
     
-    pub fn line(&mut self, py: Python, x: Series, y: Series) -> PyResult<()> {
+    pub fn line(&mut self, py: Python, x: Series, y: Series, _color: Option<&str>, filled: Option<bool>) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
-        let color = self.next_color().filled();
+        let mut color: ShapeStyle = (&self.next_color()).into();
+        if filled.unwrap_or(true) { color = color.filled(); }
 
         match &mut self.inner {
             TypedChart::F64F64(ref mut c) => {
@@ -206,10 +208,11 @@ impl Chart {
         Ok(())
     }
 
-    pub fn scatter(&mut self, py: Python, x: Series, y: Series, size: Option<u32>) -> PyResult<()> {
+    pub fn scatter(&mut self, py: Python, x: Series, y: Series, size: Option<u32>, _color: Option<&str>, filled: Option<bool>) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
         let size = size.unwrap_or(3);
-        let color = self.next_color().filled();
+        let mut color: ShapeStyle = (&self.next_color()).into();
+        if filled.unwrap_or(true) { color = color.filled(); }
 
         match &mut self.inner {
             TypedChart::F64F64(ref mut c) => {
