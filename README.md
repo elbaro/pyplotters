@@ -8,9 +8,9 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 
 ---
 
-- [Guide](#)
-- [API Reference](#)
-- [Benchmarks](#)
+- ~Guide~
+- ~API Reference~
+- ~Benchmarks~
 
 ## vs Matplotlib
 
