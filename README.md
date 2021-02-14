@@ -8,9 +8,9 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 
 ---
 
-- ~Guide~
-- ~API Reference~
-- ~Benchmarks~
+- Guide
+- API Reference
+- Benchmarks
 
 ## vs Matplotlib
 
@@ -30,7 +30,7 @@ right: matplotlib with n=1,000
 In trade, ezel does not yet have many backends and you should specify the x-range and y-range in advance.
 However these can be implemented over time because plotters already have many backends (svg, desktop, ..) and x/y-range can be inferred by storing data.
 
-```
+```py
 import time
 
 import numpy as np
@@ -80,20 +80,20 @@ Prerequisites:
 - libfontconfig
 - libfreetype
 
-```
+```sh
 pip install ezel
 ```
 
 or
 
-```
+```sh
 git clone https://github.com/elbaro/ezel.git
 cd ezel
 pip install .
 ```
 
 ## Usage
-```
+```py
 import ezel as ez
 import numpy as np
 
