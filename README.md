@@ -23,6 +23,7 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 This may not be a fair comparison but gives you a sense of how they handle large dataset.
 
 <img src="https://github.com/elbaro/ezel/raw/main/screenshots/ezel.png" class="galleryItem" width=300px /><img src="https://github.com/elbaro/ezel/raw/main/screenshots/matplotlib.png" class="galleryItem" width=300px />
+
 left: Ezel with n=1,000,000
 right: matplotlib with n=1,000
 
