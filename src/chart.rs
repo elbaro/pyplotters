@@ -11,6 +11,8 @@ use crate::hack::static_reference;
 enum TypedChart {
     F64F64(ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedCoordf64, RangedCoordf64>>),
     DateTimeF64(ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedDateTime<chrono::NaiveDateTime>, RangedCoordf64>>),
+    DateF64(ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedDate<chrono::NaiveDate>, RangedCoordf64>>),
+    DurationF64(ChartContext<'static, BitMapBackend<'static>, Cartesian2d<RangedDuration, RangedCoordf64>>),
 }
 
 #[pyclass(unsendable)]
@@ -102,6 +104,34 @@ impl Chart {
                 }
                 TypedChart::DateTimeF64(chart)
             }
+            (Dtype::NaiveDate, Dtype::F64) => {
+                let x_range: RangedDate<chrono::NaiveDate> = flowutils::unwrap_pattern!(x_range.range, RangeEnum::Date(a,b) => (a..b)).into();
+                let y_range = flowutils::unwrap_pattern!(y_range.range, RangeEnum::F64(a,b) => (a..b));
+                if mesh {
+                    if label_area.is_none() {
+                        b.set_all_label_area_size(100);
+                    }
+                }
+                let mut chart = b.build_cartesian_2d(x_range, y_range).unwrap();
+                if mesh {
+                    chart.configure_mesh().draw().unwrap();
+                }
+                TypedChart::DateF64(chart)
+            }
+            (Dtype::Duration, Dtype::F64) => {
+                let x_range: RangedDuration = flowutils::unwrap_pattern!(x_range.range, RangeEnum::Duration(a,b) => (a..b)).into();
+                let y_range = flowutils::unwrap_pattern!(y_range.range, RangeEnum::F64(a,b) => (a..b));
+                if mesh {
+                    if label_area.is_none() {
+                        b.set_all_label_area_size(100);
+                    }
+                }
+                let mut chart = b.build_cartesian_2d(x_range, y_range).unwrap();
+                if mesh {
+                    chart.configure_mesh().draw().unwrap();
+                }
+                TypedChart::DurationF64(chart)
+            }
             _ => unreachable!()
         };
         Ok(Self {
@@ -123,6 +153,12 @@ impl Chart {
             }
             TypedChart::DateTimeF64(ref mut c) => {
                 c.draw_series(LineSeries::new(x.iter_datetime(py).zip(y.iter_f64(py)),color)).unwrap();
+            }
+            TypedChart::DateF64(ref mut c) => {
+                c.draw_series(LineSeries::new(x.iter_date(py).zip(y.iter_f64(py)),color)).unwrap();
+            }
+            TypedChart::DurationF64(ref mut c) => {
+                c.draw_series(LineSeries::new(x.iter_duration(py).zip(y.iter_f64(py)),color)).unwrap();
             }
         }
         Ok(())

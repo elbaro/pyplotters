@@ -158,3 +158,50 @@ impl Time {
         self.vec.len()
     }
 }
+
+#[pyclass]
+pub struct Duration {
+    pub vec: Vec<chrono::Duration>,
+}
+
+#[pymethods]
+impl Duration {
+    #[staticmethod]
+    pub fn ns(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::nanoseconds(x)).collect() }
+    }
+    #[staticmethod]
+    pub fn us(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::microseconds(x)).collect() }
+    }
+    #[staticmethod]
+    pub fn ms(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::milliseconds(x)).collect() }
+    }
+    #[staticmethod]
+    pub fn sec(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::seconds(x)).collect() }
+    }
+    #[staticmethod]
+    pub fn iso8601(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_string());
+        todo!();
+    }
+
+    /// The format-string syntax follows Rust's format::strftime fuction.
+    #[staticmethod]
+    pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
+        assert!(series.dtype().is_string());
+        todo!();
+    }
+}
+
+impl Duration {
+    pub fn len(&self)->usize {
+        self.vec.len()
+    }
+}

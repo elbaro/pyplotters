@@ -13,6 +13,7 @@ use crate::Dtype;
 use crate::DateTime as EzelDateTime;
 use crate::Date as EzelDate;
 use crate::Time as EzelTime;
+use crate::Duration as EzelDuration;
 use chrono::{NaiveDate, NaiveDateTime};
 use pyo3::prelude::*;
 use pyo3::types::{PyList, PyString};
@@ -33,6 +34,7 @@ pub enum Series {
     EzelDateTime(Py<EzelDateTime>),
     EzelDate(Py<EzelDate>),
     EzelTime(Py<EzelTime>),
+    EzelDuration(Py<EzelDuration>),
 }
 
 impl Series {
@@ -48,6 +50,7 @@ impl Series {
             Series::EzelDateTime(..) => Dtype::NaiveDateTime,
             Series::EzelDate(x) => Dtype::NaiveDate,
             Series::EzelTime(x) => Dtype::NaiveTime,
+            Series::EzelDuration(x) => Dtype::Duration,
         }
     }
     pub fn len(&self, py: Python) -> usize {
@@ -62,6 +65,7 @@ impl Series {
             Series::EzelDateTime(x) => x.borrow(py).len(),
             Series::EzelDate(x) => x.borrow(py).len(),
             Series::EzelTime(x) => x.borrow(py).len(),
+            Series::EzelDuration(x) => x.borrow(py).len(),
         }
     }
     pub fn iter_f64<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=f64> + 'out> {
@@ -78,14 +82,13 @@ impl Series {
             Series::EzelDateTime(_) => unreachable!(),
             Series::EzelDate(..) => unreachable!(),
             Series::EzelTime(..) => unreachable!(),
+            Series::EzelDuration(..) => unreachable!(),
         }
     }
     pub fn iter_i64<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=i64> + 'out> {
         match self {
             Series::EmptyPyList => unreachable!(),
             Series::String(..) => unreachable!(),
-            // let x = x.as_ref(py);
-        // let x = x.iter().map(|pyany| pyany.extract::<f64>().unwrap());
             Series::List{dtype:_, list: x,..} => {
                 Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<i64>().unwrap()))
             },
@@ -96,14 +99,13 @@ impl Series {
             Series::EzelDateTime(_) => unreachable!(),
             Series::EzelDate(..) => unreachable!(),
             Series::EzelTime(..) => unreachable!(),
+            Series::EzelDuration(..) => unreachable!(),
         }
     }
     pub fn iter_datetime<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=chrono::NaiveDateTime> + 'out> {
         match self {
             Series::EmptyPyList => unreachable!(),
             Series::String(..) => unreachable!(),
-            // let x = x.as_ref(py);
-            // let x = x.iter().map(|pyany| pyany.extract::<f64>().unwrap());
             Series::List{dtype: Dtype::NaiveDateTime, list, ..} => {
                 Box::new(list.as_ref(py).iter().map(|pyany| pyany.extract::<pyo3_chrono::NaiveDateTime>().unwrap().0))
             },
@@ -120,6 +122,54 @@ impl Series {
             }
             Series::EzelDate(..) => unreachable!(),
             Series::EzelTime(..) => unreachable!(),
+            Series::EzelDuration(..) => unreachable!(),
+        }
+    }
+    pub fn iter_date<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=chrono::NaiveDate> + 'out> {
+        match self {
+            Series::EmptyPyList => unreachable!(),
+            Series::String(..) => unreachable!(),
+            Series::List{dtype: Dtype::NaiveDate, list, ..} => {
+                Box::new(list.as_ref(py).iter().map(|pyany| pyany.extract::<pyo3_chrono::NaiveDate>().unwrap().0))
+            },
+            Series::List{dtype: _, ..} => {
+                unreachable!()
+            },
+            Series::NumpyF64(..) => unreachable!(),
+            Series::NumpyF32(..) => unreachable!(),
+            Series::NumpyI64(..) => unreachable!(),
+            Series::NumpyI32(..) => unreachable!(),
+            Series::EzelDateTime(dt) => unreachable!(),
+            Series::EzelDate(d) => {
+                let d = d.borrow(py);
+                Box::new(IterDate::new(d))
+            }
+            Series::EzelTime(..) => unreachable!(),
+            Series::EzelDuration(..) => unreachable!(),
+        }
+    }
+    pub fn iter_duration<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=chrono::Duration> + 'out> {
+        match self {
+            Series::EmptyPyList => unreachable!(),
+            Series::String(..) => unreachable!(),
+            Series::List{dtype: Dtype::Duration, list, ..} => {
+                Box::new(list.as_ref(py).iter().map(|pyany| pyany.extract::<pyo3_chrono::Duration>().unwrap().0))
+            },
+            Series::List{dtype: _, ..} => {
+                unreachable!()
+            },
+            Series::NumpyF64(..) => unreachable!(),
+            Series::NumpyF32(..) => unreachable!(),
+            Series::NumpyI64(..) => unreachable!(),
+            Series::NumpyI32(..) => unreachable!(),
+            Series::EzelDateTime(dt) => unreachable!(),
+            Series::EzelDate(..) => unreachable!(),
+            Series::EzelTime(..) => unreachable!(),
+            Series::EzelDuration(d) => {
+                let d = d.borrow(py);
+                Box::new(IterDuration::new(d))
+            }
+            Series::EzelDuration(..) => unreachable!(),
         }
     }
     pub fn iter_str<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=&'out str> + 'out> {
@@ -134,6 +184,7 @@ impl Series {
             Series::EzelDateTime(..) => unreachable!(),
             Series::EzelDate(..) => unreachable!(),
             Series::EzelTime(..) => unreachable!(),
+            Series::EzelDuration(..) => unreachable!(),
         }
     }
 }
@@ -160,6 +211,53 @@ impl<'py> Iterator for IterDateTime<'py> {
         self.dt.vec.get(idx).map(|v| *v)
     }
 }
+
+pub struct IterDate<'py> {
+    d: PyRef<'py, EzelDate>,
+    idx: usize,
+}
+
+impl<'py> IterDate<'py> {
+    pub fn new(d: PyRef<'py, EzelDate>) -> Self {
+        Self {
+            d,
+            idx: 0,
+        }
+    }
+}
+
+impl<'py> Iterator for IterDate<'py> {
+    type Item = chrono::NaiveDate;
+    fn next(&mut self) -> Option<Self::Item> {
+        let idx = self.idx;
+        self.idx += 1;
+        self.d.vec.get(idx).map(|v| *v)
+    }
+}
+
+pub struct IterDuration<'py> {
+    d: PyRef<'py, EzelDuration>,
+    idx: usize,
+}
+
+impl<'py> IterDuration<'py> {
+    pub fn new(d: PyRef<'py, EzelDuration>) -> Self {
+        Self {
+            d,
+            idx: 0,
+        }
+    }
+}
+
+impl<'py> Iterator for IterDuration<'py> {
+    type Item = chrono::Duration;
+    fn next(&mut self) -> Option<Self::Item> {
+        let idx = self.idx;
+        self.idx += 1;
+        self.d.vec.get(idx).map(|v| *v)
+    }
+}
+
 
 impl<'source> FromPyObject<'source> for Series {
     fn extract(x: &'source PyAny) -> PyResult<Self> {

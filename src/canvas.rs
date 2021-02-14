@@ -32,7 +32,8 @@ impl Canvas {
 
     /// split the canvas into even halves.
     /// the original canvas can be still used.
-    pub fn split_horizontally(&self, pixel: u32) -> (Self, Self) {
+    pub fn split_horizontally(&self, pixel: Option<u32>) -> (Self, Self) {
+        let pixel = pixel.unwrap_or_else(|| self.area.dim_in_pixel().0/2);
         let (a1, a2) = self.area.split_horizontally(pixel);
         (Self{is_root:false, backend:self.backend.clone(), area: a1},
         Self{is_root:false, backend:self.backend.clone(), area: a2})
@@ -40,7 +41,8 @@ impl Canvas {
 
     /// split the canvas vertically.
     /// the original canvas can be still used.
-    pub fn split_vertically(&self, pixel: u32) -> (Self, Self) {
+    pub fn split_vertically(&self, pixel: Option<u32>) -> (Self, Self) {
+        let pixel = pixel.unwrap_or_else(|| self.area.dim_in_pixel().1/2);
         let (a1, a2) = self.area.split_vertically(pixel);
         (Self{is_root:false, backend:self.backend.clone(), area: a1},
         Self{is_root:false, backend:self.backend.clone(), area: a2})

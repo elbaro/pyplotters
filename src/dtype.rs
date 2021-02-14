@@ -8,6 +8,7 @@ pub enum Dtype {
     NaiveDateTime,
     NaiveDate,
     NaiveTime,
+    Duration,
 }
 
 impl Dtype {
@@ -31,7 +32,7 @@ impl Dtype {
 
     pub fn is_chrono(&self) -> bool {
         match self {
-            Dtype::NaiveDateTime | Dtype::NaiveDate | Dtype::NaiveTime => true,
+            Dtype::NaiveDateTime | Dtype::NaiveDate | Dtype::NaiveTime | Dtype::Duration => true,
             _ => false,
         }
     }

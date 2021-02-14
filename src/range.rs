@@ -1,5 +1,5 @@
 use pyo3::prelude::*;
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Duration};
 use crate::Dtype;
 
 /// Range represents a start and end.
@@ -20,6 +20,7 @@ impl Range {
             RangeEnum::DateTime(..) => Dtype::NaiveDateTime,
             RangeEnum::Date(..) => Dtype::NaiveDate,
             RangeEnum::Time(..) => Dtype::NaiveTime,
+            RangeEnum::Duration(..) => Dtype::Duration,
         }
     }
 }
@@ -51,4 +52,5 @@ pub enum RangeEnum {
     Date(NaiveDate,NaiveDate),
     DateTime(NaiveDateTime,NaiveDateTime),
     Time(NaiveTime,NaiveTime),
+    Duration(Duration, Duration),
 }

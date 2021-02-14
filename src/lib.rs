@@ -16,7 +16,7 @@ use chart::Chart;
 use range::Range;
 use series::Series;
 use dtype::Dtype;
-use datetime::{DateTime, Date, Time};
+use datetime::{DateTime, Date, Time, Duration};
 
 use pyo3::prelude::*;
 
