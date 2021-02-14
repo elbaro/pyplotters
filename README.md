@@ -6,10 +6,11 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 - object-oriented API
 - no problem with >= 100_000 points
 
+---
 
-- [Guide]()
-- [API Reference]()
-- [Benchmarks]()
+- [Guide](#)
+- [API Reference](#)
+- [Benchmarks](#)
 
 ## Install
 
