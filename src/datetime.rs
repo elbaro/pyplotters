@@ -18,8 +18,8 @@
 //! ezel.DateTime.iso8601(arr)
 //! ezel.DateTime.parse(arr, "%Y %b %d %H %M %S")
 
-use pyo3::prelude::*;
 use crate::Series;
+use pyo3::prelude::*;
 use std::str::FromStr;
 
 #[pyclass]
@@ -28,7 +28,7 @@ pub struct DateTime {
 }
 
 impl DateTime {
-    pub fn len(&self)->usize {
+    pub fn len(&self) -> usize {
         self.vec.len()
     }
 }
@@ -38,34 +38,71 @@ impl DateTime {
     #[staticmethod]
     pub fn timestamp_ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000_000, (x%1_000_000_000) as u32)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| {
+                    chrono::NaiveDateTime::from_timestamp(
+                        x / 1_000_000_000,
+                        (x % 1_000_000_000) as u32,
+                    )
+                })
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000, (x%1_000_000) as u32)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| {
+                    chrono::NaiveDateTime::from_timestamp(x / 1_000_000, (x % 1_000_000) as u32)
+                })
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000, (x%1_000) as u32)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x / 1_000, (x % 1_000) as u32))
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x, 0))
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn iso8601(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_string());
-        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::from_str(x).unwrap()).collect() }
+        Self {
+            vec: series
+                .iter_str(py)
+                .map(|x| chrono::NaiveDateTime::from_str(x).unwrap())
+                .collect(),
+        }
     }
 
     /// The format-string syntax follows Rust's format::strftime fuction.
     #[staticmethod]
     pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
         assert!(series.dtype().is_string());
-        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::parse_from_str(x, fmt).unwrap()).collect() }
+        Self {
+            vec: series
+                .iter_str(py)
+                .map(|x| chrono::NaiveDateTime::parse_from_str(x, fmt).unwrap())
+                .collect(),
+        }
     }
 }
 
@@ -79,22 +116,42 @@ impl Date {
     #[staticmethod]
     pub fn timestamp_ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000_000, 0).date()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x / 1_000_000_000, 0).date())
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000, 0).date()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x / 1_000_000, 0).date())
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000, 0).date()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x / 1_000, 0).date())
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0).date()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x, 0).date())
+                .collect(),
+        }
     }
     // #[staticmethod]
     // pub fn iso8601(series: Series) -> Self {
@@ -107,7 +164,7 @@ impl Date {
 }
 
 impl Date {
-    pub fn len(&self)->usize {
+    pub fn len(&self) -> usize {
         self.vec.len()
     }
 }
@@ -122,39 +179,84 @@ impl Time {
     #[staticmethod]
     pub fn timestamp_ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000_000, (x%1_000_000_000) as u32).time()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| {
+                    chrono::NaiveDateTime::from_timestamp(
+                        x / 1_000_000_000,
+                        (x % 1_000_000_000) as u32,
+                    )
+                    .time()
+                })
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000, (x%1_000_000) as u32).time()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| {
+                    chrono::NaiveDateTime::from_timestamp(x / 1_000_000, (x % 1_000_000) as u32)
+                        .time()
+                })
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000, (x%1_000) as u32).time()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| {
+                    chrono::NaiveDateTime::from_timestamp(x / 1_000, (x % 1_000) as u32).time()
+                })
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn timestamp_sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0).time()).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::NaiveDateTime::from_timestamp(x, 0).time())
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn iso8601(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_string());
-        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::from_str(x).unwrap().time()).collect() }
+        Self {
+            vec: series
+                .iter_str(py)
+                .map(|x| chrono::NaiveDateTime::from_str(x).unwrap().time())
+                .collect(),
+        }
     }
 
     /// The format-string syntax follows Rust's format::strftime fuction.
     #[staticmethod]
     pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
         assert!(series.dtype().is_string());
-        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::parse_from_str(x, fmt).unwrap().time()).collect() }
+        Self {
+            vec: series
+                .iter_str(py)
+                .map(|x| {
+                    chrono::NaiveDateTime::parse_from_str(x, fmt)
+                        .unwrap()
+                        .time()
+                })
+                .collect(),
+        }
     }
 }
 
 impl Time {
-    pub fn len(&self)->usize {
+    pub fn len(&self) -> usize {
         self.vec.len()
     }
 }
@@ -169,22 +271,42 @@ impl Duration {
     #[staticmethod]
     pub fn ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::nanoseconds(x)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::Duration::nanoseconds(x))
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::microseconds(x)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::Duration::microseconds(x))
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::milliseconds(x)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::Duration::milliseconds(x))
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
-        Self { vec: series.iter_i64(py).map(|x| chrono::Duration::seconds(x)).collect() }
+        Self {
+            vec: series
+                .iter_i64(py)
+                .map(|x| chrono::Duration::seconds(x))
+                .collect(),
+        }
     }
     #[staticmethod]
     pub fn iso8601(py: Python, series: Series) -> Self {
@@ -201,7 +323,7 @@ impl Duration {
 }
 
 impl Duration {
-    pub fn len(&self)->usize {
+    pub fn len(&self) -> usize {
         self.vec.len()
     }
 }

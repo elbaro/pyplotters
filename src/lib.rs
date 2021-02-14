@@ -1,26 +1,25 @@
-mod hack;
 mod backend;
 mod canvas;
-mod color;
 mod chart;
+mod color;
+mod datetime;
+mod dtype;
+mod hack;
+mod help;
 mod range;
 mod series;
-mod dtype;
-mod datetime;
-mod help;
 
 use help::module as help_pymodule;
 
 use backend::Backend;
 use canvas::Canvas;
 use chart::Chart;
+use datetime::{Date, DateTime, Duration, Time};
+use dtype::Dtype;
 use range::Range;
 use series::Series;
-use dtype::Dtype;
-use datetime::{DateTime, Date, Time, Duration};
 
 use pyo3::prelude::*;
-
 
 #[pymodule]
 fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -38,11 +37,10 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     Ok(())
 }
 
-
 // #[cfg(test)]
 // mod tests {
 //     use pyo3::prelude::*;
-    
+
 //     #[test]
 //     fn it_works() {
 //         pyo3::Python::with_gil(|py| {
