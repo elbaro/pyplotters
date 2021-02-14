@@ -21,6 +21,8 @@ use series::Series;
 
 use pyo3::prelude::*;
 
+/// ezel is a fast Python plotting library.
+/// Its main focus is a quick visualization for daily data-science and analysis.
 #[pymodule]
 fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     // m.add_function(pyo3::wrap_pyfunction!(count, m)?).unwrap();

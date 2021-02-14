@@ -6,7 +6,9 @@ use crate::Backend;
 use plotters::coord::Shift;
 use std::sync::Arc;
 
+/// Canvas defines a drawing area for charts.
 #[pyclass(unsendable)]
+#[text_signature = "(width=1000, height=800)"]
 pub struct Canvas {
     is_root: bool,
     backend: Arc<Backend>, // this is shared by all canvas from the same root canvas
@@ -30,8 +32,10 @@ impl Canvas {
         }
     }
 
-    /// split the canvas into even halves.
-    /// the original canvas can be still used.
+    /// split the canvas into two sub-canvas.
+    /// the original canvas still can be used.
+    /// If `pixel` is None, the canvas is evenly split.
+    #[text_signature = "(pixel=None)"]
     pub fn split_horizontally(&self, pixel: Option<u32>) -> (Self, Self) {
         let pixel = pixel.unwrap_or_else(|| self.area.dim_in_pixel().0 / 2);
         let (a1, a2) = self.area.split_horizontally(pixel);
@@ -49,8 +53,10 @@ impl Canvas {
         )
     }
 
-    /// split the canvas vertically.
-    /// the original canvas can be still used.
+    /// split the canvas into two sub-canvas.
+    /// the original canvas still can be used.
+    /// If `pixel` is None, the canvas is evenly split.
+    #[text_signature = "(pixel=None)"]
     pub fn split_vertically(&self, pixel: Option<u32>) -> (Self, Self) {
         let pixel = pixel.unwrap_or_else(|| self.area.dim_in_pixel().1 / 2);
         let (a1, a2) = self.area.split_vertically(pixel);
@@ -68,6 +74,9 @@ impl Canvas {
         )
     }
 
+    /// Save the canvas to an image file.
+    /// Currently you can save only the root canvas.
+    #[text_signature = "(path)"]
     pub fn save(&self, path: &str) -> PyResult<()> {
         if !self.is_root {
             return Err(pyo3::exceptions::PyValueError::new_err(

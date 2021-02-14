@@ -36,6 +36,7 @@ impl DateTime {
 #[pymethods]
 impl DateTime {
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -51,6 +52,7 @@ impl DateTime {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -63,6 +65,7 @@ impl DateTime {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -73,6 +76,7 @@ impl DateTime {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -83,6 +87,7 @@ impl DateTime {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn iso8601(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_string());
         Self {
@@ -95,6 +100,7 @@ impl DateTime {
 
     /// The format-string syntax follows Rust's format::strftime fuction.
     #[staticmethod]
+    #[text_signature = "(series, fmt)"]
     pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
         assert!(series.dtype().is_string());
         Self {
@@ -114,6 +120,7 @@ pub struct Date {
 #[pymethods]
 impl Date {
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -124,6 +131,7 @@ impl Date {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -134,6 +142,7 @@ impl Date {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -144,6 +153,7 @@ impl Date {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -177,6 +187,7 @@ pub struct Time {
 #[pymethods]
 impl Time {
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -193,6 +204,7 @@ impl Time {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -206,6 +218,7 @@ impl Time {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -218,6 +231,7 @@ impl Time {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn timestamp_sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -228,6 +242,7 @@ impl Time {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn iso8601(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_string());
         Self {
@@ -240,6 +255,7 @@ impl Time {
 
     /// The format-string syntax follows Rust's format::strftime fuction.
     #[staticmethod]
+    #[text_signature = "(series, fmt)"]
     pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
         assert!(series.dtype().is_string());
         Self {
@@ -269,6 +285,7 @@ pub struct Duration {
 #[pymethods]
 impl Duration {
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn ns(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -279,6 +296,7 @@ impl Duration {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn us(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -289,6 +307,7 @@ impl Duration {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn ms(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -299,6 +318,7 @@ impl Duration {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn sec(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_integer());
         Self {
@@ -309,6 +329,7 @@ impl Duration {
         }
     }
     #[staticmethod]
+    #[text_signature = "(series)"]
     pub fn iso8601(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_string());
         todo!();
@@ -316,6 +337,7 @@ impl Duration {
 
     /// The format-string syntax follows Rust's format::strftime fuction.
     #[staticmethod]
+    #[text_signature = "(series, fmt)"]
     pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
         assert!(series.dtype().is_string());
         todo!();

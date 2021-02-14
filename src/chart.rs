@@ -31,6 +31,7 @@ enum TypedChart {
 }
 
 #[pyclass(unsendable)]
+#[text_signature = "(canvas, x_range, y_range, margin=None, margin_left=None ,margin_right=None, margin_top=None, margin_bottom=None, label_area=None, label_area_left=None, label_area_right=None, label_area_top=None, label_area_bottom=None, caption=None, caption_font=None, caption_size=None, mesh_x=None, mesh_y=None, axis_x=None, axis_y=None, axis_x_label_max=None, axis_y_label_max=None)"]
 pub struct Chart {
     _canvas: Py<Canvas>, // Why Py<Canvas>? Since canvas is exposed to user, Python object around Canvas shouldn't be destroyed.
     inner: TypedChart,
@@ -306,6 +307,9 @@ impl Chart {
         })
     }
 
+    /// x and y accepts a native Python list or a 1D numpy.ndarray.
+    /// _color parameter is not implemented yet.
+    #[text_signature = "(x, y, _color=None, filled=None, stroke_width=None)"]
     pub fn line(
         &mut self,
         py: Python,

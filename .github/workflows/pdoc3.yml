@@ -1,0 +1,34 @@
+name: Build-Doc
+on: push
+
+jobs:
+  build-doc:
+    name: Build the documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v1
+      - name: Install pdoc3
+        uses: BSFishy/pip-action@v1
+        with:
+          packages: |
+            pdoc3
+      - name: Setup rust
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: nightly
+            default: true
+            override: true
+            components: rustfmt, clippy
+      - name: Build .so and docs
+        run: cargo build && mv target/debug/libezel.so ezel.so && pdoc3 --force --html -o pages ezel.so && mv pages/ezel.html pages/index.html
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
