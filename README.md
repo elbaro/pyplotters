@@ -9,7 +9,7 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 ---
 
 - Guide
-- API Reference
+- [API Reference](https://elbaro.github.io/ezel/)
 - Benchmarks
 
 ## vs Matplotlib

@@ -309,7 +309,7 @@ impl Chart {
 
     /// x and y accepts a native Python list or a 1D numpy.ndarray.
     /// _color parameter is not implemented yet.
-    #[text_signature = "(x, y, _color=None, filled=None, stroke_width=None)"]
+    #[text_signature = "($self, x, y, _color=None, filled=None, stroke_width=None)"]
     pub fn line(
         &mut self,
         py: Python,
@@ -350,9 +350,12 @@ impl Chart {
                 .unwrap();
             }
         }
-        Ok(())
     }
+    Ok(())
 
+    /// x and y accepts a native Python list or a 1D numpy.ndarray.
+    /// _color parameter is not implemented yet.
+    #[text_signature = "($self, x, y, size, _color=None, filled=None, stroke_width=None)"]
     pub fn scatter(
         &mut self,
         py: Python,
