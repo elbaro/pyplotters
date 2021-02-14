@@ -191,7 +191,7 @@ impl Chart {
         let color = ShapeStyle {
             color: self.next_color().to_rgba(),
             filled: filled.unwrap_or(true),
-            stroke_width: stroke_width.unwrap_or(10),
+            stroke_width: stroke_width.unwrap_or(3),
         };
 
         match &mut self.inner {
@@ -213,11 +213,11 @@ impl Chart {
 
     pub fn scatter(&mut self, py: Python, x: Series, y: Series, size: Option<u32>, _color: Option<&str>, filled: Option<bool>, stroke_width: Option<u32>) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
-        let size = size.unwrap_or(3);
+        let size = size.unwrap_or(5);
         let color = ShapeStyle {
             color: self.next_color().to_rgba(),
             filled: filled.unwrap_or(true),
-            stroke_width: stroke_width.unwrap_or(10),
+            stroke_width: stroke_width.unwrap_or(3),
         };
 
         match &mut self.inner {
@@ -231,7 +231,16 @@ impl Chart {
                     Circle::new((x,y),size,color.clone())
                 })).unwrap();
             }
-            _ => unreachable!()
+            TypedChart::DateF64(ref mut c) => {
+                c.draw_series(x.iter_date(py).zip(y.iter_f64(py)).map(|(x,y)| {
+                    Circle::new((x,y),size,color.clone())
+                })).unwrap();
+            }
+            TypedChart::DurationF64(ref mut c) => {
+                c.draw_series(x.iter_duration(py).zip(y.iter_f64(py)).map(|(x,y)| {
+                    Circle::new((x,y),size,color.clone())
+                })).unwrap();
+            }
         }
 
         Ok(())
