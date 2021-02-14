@@ -35,7 +35,8 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Chart>()?;
     m.add_class::<Range>()?;
     m.add_class::<DateTime>()?;
-    m.add_class::<DateTime>()?;
+    m.add_class::<Date>()?;
+    m.add_class::<Time>()?;
     Ok(())
 }
 
