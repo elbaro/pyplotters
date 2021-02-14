@@ -186,10 +186,13 @@ impl Chart {
         })
     }
     
-    pub fn line(&mut self, py: Python, x: Series, y: Series, _color: Option<&str>, filled: Option<bool>) -> PyResult<()> {
+    pub fn line(&mut self, py: Python, x: Series, y: Series, _color: Option<&str>, filled: Option<bool>, stroke_width: Option<u32>) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
-        let mut color: ShapeStyle = (&self.next_color()).into();
-        if filled.unwrap_or(true) { color = color.filled(); }
+        let color = ShapeStyle {
+            color: self.next_color().to_rgba(),
+            filled: filled.unwrap_or(true),
+            stroke_width: stroke_width.unwrap_or(10),
+        };
 
         match &mut self.inner {
             TypedChart::F64F64(ref mut c) => {
@@ -208,11 +211,14 @@ impl Chart {
         Ok(())
     }
 
-    pub fn scatter(&mut self, py: Python, x: Series, y: Series, size: Option<u32>, _color: Option<&str>, filled: Option<bool>) -> PyResult<()> {
+    pub fn scatter(&mut self, py: Python, x: Series, y: Series, size: Option<u32>, _color: Option<&str>, filled: Option<bool>, stroke_width: Option<u32>) -> PyResult<()> {
         assert!(x.len(py) == y.len(py));
         let size = size.unwrap_or(3);
-        let mut color: ShapeStyle = (&self.next_color()).into();
-        if filled.unwrap_or(true) { color = color.filled(); }
+        let color = ShapeStyle {
+            color: self.next_color().to_rgba(),
+            filled: filled.unwrap_or(true),
+            stroke_width: stroke_width.unwrap_or(10),
+        };
 
         match &mut self.inner {
             TypedChart::F64F64(ref mut c) => {

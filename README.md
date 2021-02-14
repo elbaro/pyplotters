@@ -109,9 +109,10 @@ Currently only numeric scalars are supported.
 - [x] Add .scatter()
 - [x] Support datetime, date, time, duration in x-axis
 - [x] auto color rotation
+- [x] Title font customization
 - [ ] line, scatter style customization
 - [ ] Axis style customization
-- [ ] Title font customization
+- [ ] Label style customization
 - [ ] Histogram
 
 ## Roadmap for 0.2.0
