@@ -132,7 +132,10 @@ impl Chart {
                 }
                 TypedChart::DurationF64(chart)
             }
-            _ => unreachable!()
+            _ => {
+                println!("x {:?} y {:?}", x_dtype, y_dtype);
+                unreachable!()
+            }
         };
         Ok(Self {
             _canvas: canvas,

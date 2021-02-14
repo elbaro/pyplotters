@@ -274,8 +274,10 @@ impl<'source> FromPyObject<'source> for Series {
             }else if arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::NaiveTime>().is_ok()){
                 return Ok(Series::List{dtype: Dtype::NaiveTime, list: arr.into()});
             }
+            else if arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::Duration>().is_ok()){
+                return Ok(Series::List{dtype: Dtype::Duration, list: arr.into()});
+            }
             else {
-                println!("{:?}", arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::NaiveDateTime>().is_ok()));
                 todo!()
             }
             

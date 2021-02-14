@@ -107,18 +107,18 @@ Currently only numeric scalars are supported.
 - [x] Accept a Python list as an argument
 - [x] Accept i32, i64, f32 as arguments (by converting to f64)
 - [x] Add .scatter()
-- [x] Support datetime
-- [ ] Support date
-- [ ] Support time
-- [ ] line, scatter style customization
+- [x] Support datetime, date, time, duration in x-axis
 - [x] auto color rotation
+- [ ] line, scatter style customization
+- [ ] Axis style customization
 - [ ] Title font customization
 - [ ] Histogram
-- [ ] Static Build
 
 ## Roadmap for 0.2.0
+- [ ] Refactor repeating code with macros
 - [ ] Support other backends such as SVG and wasm
 - [ ] Add `xy=` which accepts a sequence of xy pairs.
 - [ ] Log-scale on x, y axis
 - [ ] Draw i32, i64, f32 data without converting to f64
 - [ ] Support Pandas/PyPolars DataFrames/Series
+- [ ] Static Build

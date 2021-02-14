@@ -41,6 +41,8 @@ impl Range {
     pub fn datetime(a: pyo3_chrono::NaiveDateTime, b:pyo3_chrono::NaiveDateTime) -> Self {Self {range: RangeEnum::DateTime(a.0,b.0)}}
     #[staticmethod]
     pub fn time(a: pyo3_chrono::NaiveTime, b:pyo3_chrono::NaiveTime) -> Self {Self {range: RangeEnum::Time(a.0,b.0)}}
+    #[staticmethod]
+    pub fn duration(a: pyo3_chrono::Duration, b:pyo3_chrono::Duration) -> Self {Self {range: RangeEnum::Duration(a.0,b.0)}}
 }
 
 #[derive(Clone, Copy)]
