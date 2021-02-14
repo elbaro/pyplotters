@@ -17,12 +17,12 @@ pub struct Canvas {
 impl Canvas {
     /// Creates a new root canvas.
     #[new]
-    pub fn new(width: Option<usize>, height: Option<usize>) -> Self {
-        let width = width.unwrap_or(800);
-        let height = height.unwrap_or(600);
+    pub fn new(width: Option<usize>, height: Option<usize>, _color: Option<&str>) -> Self {
+        let width = width.unwrap_or(1000);
+        let height = height.unwrap_or(800);
         let backend = Arc::new(Backend::new(width, height));
         let area: DrawingArea<_,_> = (&backend.inner).into();
-        area.fill(&WHITE).unwrap();
+        area.fill(&RGBColor(238,238,238)).unwrap();
         Self {
             is_root: true,
             backend,

@@ -1,6 +1,7 @@
 mod hack;
 mod backend;
 mod canvas;
+mod color;
 mod chart;
 mod range;
 mod series;

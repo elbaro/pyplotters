@@ -111,11 +111,14 @@ Currently only numeric scalars are supported.
 - [x] auto color rotation
 - [x] Title font customization
 - [ ] line, scatter style customization
-- [ ] Axis style customization
-- [ ] Label style customization
+- [x] Axis layout customization
+- [x] Label layout customization
 - [ ] Histogram
 
 ## Roadmap for 0.2.0
+- [ ] Axis style customization
+- [ ] Label style customization
+- [ ] intergrate with colorous crate and allow color strings
 - [ ] Refactor repeating code with macros
 - [ ] Error and API parameter type review
 - [ ] Support other backends such as SVG and wasm

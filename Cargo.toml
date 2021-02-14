@@ -17,14 +17,9 @@ crate-type = ["rlib", "cdylib"]
 extension-module = ["pyo3/extension-module"]
 default = ["extension-module"]
 
-[target.x86_64-apple-darwin]
-rustflags = [
-  "-C", "link-arg=-undefined",
-  "-C", "link-arg=dynamic_lookup",
-]
-
 [dependencies]
 chrono = "0.4.19"
+colorous = "1.0.3"
 flowutils = "0.1.0"
 image = "0.23.13"
 numpy = "0.13.0"
