@@ -11,19 +11,28 @@ use std::collections::binary_heap::Iter;
 
 use crate::Dtype;
 use crate::DateTime as EzelDateTime;
+use crate::Date as EzelDate;
+use crate::Time as EzelTime;
 use chrono::{NaiveDate, NaiveDateTime};
 use pyo3::prelude::*;
-use pyo3::types::PyList;
+use pyo3::types::{PyList, PyString};
 use numpy::array::PyArray1;
 
+/// An adapter between Python series types (PyList, PyArray1, pandas.Series) and Rust.
+/// This is used in the Python<->Rust API boundary to
+///     1. avoid copy
+///     2. easily cast to super type
 pub enum Series {
     EmptyPyList,
+    String(Py<PyList>),
     List{dtype: Dtype, list: Py<PyList>},
     NumpyF64(Py<PyArray1<f64>>),
     NumpyF32(Py<PyArray1<f32>>),
     NumpyI64(Py<PyArray1<i64>>),
     NumpyI32(Py<PyArray1<i32>>),
     EzelDateTime(Py<EzelDateTime>),
+    EzelDate(Py<EzelDate>),
+    EzelTime(Py<EzelTime>),
 }
 
 impl Series {
@@ -96,6 +105,18 @@ impl Series {
                 let dt = dt.borrow(py);
                 Box::new(IterDateTime::new(dt))
             }
+        }
+    }
+    pub fn iter_str<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=&'out str> + 'out> {
+        match self {
+            Series::EmptyPyList => unreachable!(),
+            Series::String(x) => Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<PyString>().unwrap().to_str().unwrap())),
+            Series::List{..} => unreachable!(),
+            Series::NumpyF64(..) => unreachable!(),
+            Series::NumpyF32(..) => unreachable!(),
+            Series::NumpyI64(..) => unreachable!(),
+            Series::NumpyI32(..) => unreachable!(),
+            Series::EzelDateTime(dt) => unreachable!(),
         }
     }
 }

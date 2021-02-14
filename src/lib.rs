@@ -6,7 +6,7 @@ mod range;
 mod series;
 mod dtype;
 mod datetime;
-mod mesh;
+mod help;
 
 use backend::Backend;
 use canvas::Canvas;
@@ -15,7 +15,6 @@ use range::Range;
 use series::Series;
 use dtype::Dtype;
 use datetime::DateTime;
-use mesh::Mesh;
 
 use pyo3::prelude::*;
 
@@ -25,10 +24,13 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     // m.add_function(pyo3::wrap_pyfunction!(count, m)?).unwrap();
     // m.add_class()
 
+    m.add_submodule(pyo3::wrap_pymodule!(help::help_module));
+
     // class list
     m.add_class::<Canvas>()?;
     m.add_class::<Chart>()?;
     m.add_class::<Range>()?;
+    m.add_class::<DateTime>()?;
     m.add_class::<DateTime>()?;
     Ok(())
 }

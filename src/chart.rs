@@ -6,7 +6,6 @@ use crate::Series;
 use crate::Dtype;
 use crate::range::{Range, RangeEnum};
 use crate::hack::static_reference;
-use crate::Mesh;
 
 
 enum TypedChart {
@@ -35,11 +34,30 @@ impl Chart {
 
 #[pymethods]
 impl Chart {
+    /// Creates new Chart on a Canvas.
+    /// 
+    /// ## Chart Styles
+    /// caption: the title of the chart (TODO: caption font)
+    ///     caption_size: caption font size in px
+    ///     caption_font: "sans-serif", "serif", "monospace", or font name
+    /// margin: the space between the canvas and the chart
+    /// 
+    /// ## Axis Styles
+    /// x_label (TODO: font)
+    /// y_label (TODO: font)
+    /// label_area:            space(px) for the top/bottom/left/right label areas
+    ///     label_area_left:   space(px) for the left label area. precedes label_area.
+    ///     label_area_right:  space(px) for right left label area. precedes label_area.
+    ///     label_area_top:    space(px) for the top label area. precedes label_area.
+    ///     label_area_bottom: space(px) for the bottom label area. precedes label_area.
+    /// 
     #[new]
     pub fn new(
             py: Python,
             canvas: Py<Canvas>,
-            x_range: Py<Range>, y_range: Py<Range>, margin: Option<i32>, label_area: Option<i32>, caption: Option<String>,
+            x_range: Py<Range>, y_range: Py<Range>, margin: Option<i32>,
+            label_area: Option<i32>,
+            caption: Option<String>,
             mesh: Option<bool>) -> PyResult<Self> {
         let x_range = x_range.borrow(py);
         let y_range = y_range.borrow(py);
@@ -130,17 +148,5 @@ impl Chart {
         }
 
         Ok(())
-    }
-
-    pub fn mesh(&mut self,
-        x_text: Option<String>,
-        y_text: Option<String>,
-    ) -> PyResult<()> {
-        todo!();
-        // let mut mesh = self.inner.configure_mesh();
-        // if let Some(s) = x_text { mesh.x_desc(s); }
-        // if let Some(s) = y_text { mesh.y_desc(s); }
-        // mesh.draw().unwrap();
-        // Ok(())
     }
 }

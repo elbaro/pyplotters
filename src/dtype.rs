@@ -35,4 +35,8 @@ impl Dtype {
             _ => false,
         }
     }
+
+    pub fn is_string(&self) -> bool {
+        self == &Dtype::String
+    }
 }
