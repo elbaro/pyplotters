@@ -116,10 +116,12 @@ Currently only numeric scalars are supported.
 - [x] Support datetime, date, time, duration in x-axis
 - [x] auto color rotation
 - [x] Title font customization
-- [ ] line, scatter style customization
+- [x] line, scatter style customization (except color)
 - [x] Axis layout customization
 - [x] Label layout customization
 - [ ] Histogram
+- [ ] Python docs
+- [ ] Better default layout
 
 ## Roadmap for 0.2.0
 - [ ] Axis style customization
