@@ -269,7 +269,12 @@ impl<'source> FromPyObject<'source> for Series {
                 return Ok(Series::List{dtype: Dtype::F64, list: arr.into()});
             } else if arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::NaiveDateTime>().is_ok()){
                 return Ok(Series::List{dtype: Dtype::NaiveDateTime, list: arr.into()});
-            } else {
+            } else if arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::NaiveDate>().is_ok()){
+                return Ok(Series::List{dtype: Dtype::NaiveDate, list: arr.into()});
+            }else if arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::NaiveTime>().is_ok()){
+                return Ok(Series::List{dtype: Dtype::NaiveTime, list: arr.into()});
+            }
+            else {
                 println!("{:?}", arr.iter().all(|pyany| pyany.extract::<pyo3_chrono::NaiveDateTime>().is_ok()));
                 todo!()
             }
