@@ -116,6 +116,7 @@ Currently only numeric scalars are supported.
 
 ## Roadmap for 0.2.0
 - [ ] Refactor repeating code with macros
+- [ ] Error and API parameter type review
 - [ ] Support other backends such as SVG and wasm
 - [ ] Add `xy=` which accepts a sequence of xy pairs.
 - [ ] Log-scale on x, y axis

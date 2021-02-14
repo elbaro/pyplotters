@@ -48,6 +48,8 @@ impl Chart {
     /// x_label (TODO: font)
     /// y_label (TODO: font)
     /// label_area:            space(px) for the top/bottom/left/right label areas
+    ///     label_area_x:      space(px) for top, bottom
+    ///     label_area_y:      space(px) for left, right
     ///     label_area_left:   space(px) for the left label area. precedes label_area.
     ///     label_area_right:  space(px) for right left label area. precedes label_area.
     ///     label_area_top:    space(px) for the top label area. precedes label_area.
@@ -57,18 +59,55 @@ impl Chart {
     pub fn new(
             py: Python,
             canvas: Py<Canvas>,
-            x_range: Py<Range>, y_range: Py<Range>, margin: Option<i32>,
+            x_range: Py<Range>,
+            y_range: Py<Range>,
+            //
+            margin: Option<i32>,
+            margin_left: Option<i32>,
+            margin_right: Option<i32>,
+            margin_top: Option<i32>,
+            margin_bottom: Option<i32>,
+            //
             label_area: Option<i32>,
-            caption: Option<String>,
+            label_area_left: Option<i32>,
+            label_area_right: Option<i32>,
+            label_area_top: Option<i32>,
+            label_area_bottom: Option<i32>,
+            //
+            caption: Option<&str>,
+            caption_font: Option<&str>,
+            caption_size: Option<u32>,
+            //
             mesh: Option<bool>) -> PyResult<Self> {
         let x_range = x_range.borrow(py);
         let y_range = y_range.borrow(py);
         let canvas_ref = canvas.borrow_mut(py);
         let mesh = mesh.unwrap_or(true);
         let mut b = ChartBuilder::on(unsafe{static_reference(&canvas_ref.area)});
-        if let Some(v) = margin { b.margin(v);  }
+        if let Some(v) = margin { b.margin(v);  }        
+        if let Some(v) = margin_left { b.margin_left(v);  }
+        if let Some(v) = margin_right { b.margin_right(v);  }
+        if let Some(v) = margin_top { b.margin_top(v);  }
+        if let Some(v) = margin_bottom { b.margin_bottom(v);  }
+
+        // user specified no margin at all
+        if margin.is_none() && margin_left.is_none() && margin_right.is_none() && margin_top.is_none() && margin_bottom.is_none() {
+            b.margin_left(20);
+            b.margin_right(20);
+            b.margin_top(20);
+            b.margin_bottom(20);
+        }
+
+        if label_area.is_none() && label_area_left.is_none() && label_area_right.is_none() && label_area_top.is_none() && label_area_bottom.is_none() {
+            b.set_all_label_area_size(20);
+        }
+
         if let Some(v) = label_area { b.set_all_label_area_size(v); }
-        if let Some(v) = caption { b.caption(v, ("sans-serif", 20)); }
+        if let Some(v) = label_area_left { b.y_label_area_size(v); }
+        if let Some(v) = label_area_right { b.right_y_label_area_size(v); }
+        if let Some(v) = label_area_top { b.top_x_label_area_size(v); }
+        if let Some(v) = label_area_bottom { b.x_label_area_size(v); }
+        if let Some(v) = caption { b.caption(v, (caption_font.unwrap_or("sans-serif"), caption_size.unwrap_or(20))); }
         drop(canvas_ref);
 
         let x_dtype = x_range.dtype();
