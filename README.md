@@ -15,7 +15,7 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 ## vs Matplotlib
 
 |                      | n = 10,000 | n = 100,000 | n = 1,000,000                                               | n = 10,000,000 |
-|----------------------|--------------------------|-------------------------------------------------------------| -------------- |
+|----------------------|------------|-------------|-------------------------------------------------------------| -------------- |
 | ezel                 | 0.043949   | 0.179385    | 1.561190                                                    | 15.397686      |
 | matplotlib           | 0.416871   | 3.159303    | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |                |
 | matplotlib (GTK3agg) | 0.414843   | 1.723030    | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |                |
