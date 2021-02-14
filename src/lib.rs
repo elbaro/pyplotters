@@ -24,7 +24,7 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     // m.add_function(pyo3::wrap_pyfunction!(count, m)?).unwrap();
     // m.add_class()
 
-    m.add_submodule(pyo3::wrap_pymodule!(help::help_module));
+    m.add_submodule(pyo3::wrap_pymodule!(help::module));
 
     // class list
     m.add_class::<Canvas>()?;

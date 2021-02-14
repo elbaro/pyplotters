@@ -50,7 +50,7 @@ impl Chart {
     ///     label_area_right:  space(px) for right left label area. precedes label_area.
     ///     label_area_top:    space(px) for the top label area. precedes label_area.
     ///     label_area_bottom: space(px) for the bottom label area. precedes label_area.
-    /// 
+    ///
     #[new]
     pub fn new(
             py: Python,

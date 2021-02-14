@@ -20,6 +20,7 @@
 
 use pyo3::prelude::*;
 use crate::Series;
+use std::str::FromStr;
 
 #[pyclass]
 pub struct DateTime {
@@ -55,13 +56,16 @@ impl DateTime {
         Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0)).collect() }
     }
     #[staticmethod]
-    pub fn iso8601(series: Series) -> Self {
+    pub fn iso8601(py: Python, series: Series) -> Self {
         assert!(series.dtype().is_string());
-        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0)).collect() }
+        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::from_str(x).unwrap()).collect() }
     }
+
+    /// The format-string syntax follows Rust's format::strftime fuction.
     #[staticmethod]
-    pub fn parse() -> Self {
-        todo!();
+    pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
+        assert!(series.dtype().is_string());
+        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::parse_from_str(x, fmt).unwrap()).collect() }
     }
 }
 
@@ -92,12 +96,53 @@ impl Date {
         assert!(series.dtype().is_integer());
         Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0).date()).collect() }
     }
+    // #[staticmethod]
+    // pub fn iso8601(series: Series) -> Self {
+    //     todo!();
+    // }
+    // #[staticmethod]
+    // pub fn parse() -> Self {
+    //     todo!();
+    // }
+}
+
+#[pyclass]
+struct Time {
+    vec: Vec<chrono::NaiveTime>,
+}
+
+#[pymethods]
+impl Time {
     #[staticmethod]
-    pub fn iso8601(series: Series) -> Self {
-        todo!();
+    pub fn timestamp_ns(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000_000, (x%1_000_000_000) as u32)).time().collect() }
     }
     #[staticmethod]
-    pub fn parse() -> Self {
-        todo!();
+    pub fn timestamp_us(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000_000, (x%1_000_000) as u32)).time().collect() }
+    }
+    #[staticmethod]
+    pub fn timestamp_ms(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x/1_000, (x%1_000) as u32)).time().collect() }
+    }
+    #[staticmethod]
+    pub fn timestamp_sec(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_integer());
+        Self { vec: series.iter_i64(py).map(|x| chrono::NaiveDateTime::from_timestamp(x, 0)).time().collect() }
+    }
+    #[staticmethod]
+    pub fn iso8601(py: Python, series: Series) -> Self {
+        assert!(series.dtype().is_string());
+        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::from_str(x).unwrap()).time().collect() }
+    }
+
+    /// The format-string syntax follows Rust's format::strftime fuction.
+    #[staticmethod]
+    pub fn parse(py: Python, series: Series, fmt: &str) -> Self {
+        assert!(series.dtype().is_string());
+        Self { vec: series.iter_str(py).map(|x| chrono::NaiveDateTime::parse_from_str(x, fmt).unwrap()).time().collect() }
     }
 }
