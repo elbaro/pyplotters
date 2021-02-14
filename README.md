@@ -14,11 +14,11 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 
 ## vs Matplotlib
 
-|                      | n = 10,000 | n = 100,000 | n = 1,000,000                                               | n = 10,000,000 |
-|----------------------|------------|-------------|-------------------------------------------------------------| -------------- |
-| ezel                 | 0.043949   | 0.179385    | 1.561190                                                    | 15.397686      |
-| matplotlib           | 0.416871   | 3.159303    | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |                |
-| matplotlib (GTK3agg) | 0.414843   | 1.723030    | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |                |
+|                      | n = 10,000 | n = 100,000 | n = 1,000,000  | n = 10,000,000 |
+|----------------------|------------|-------------|----------------| -------------- |
+| ezel                 | 0.043949   | 0.179385    | 1.561190       | 15.397686      |
+| matplotlib           | 0.416871   | 3.159303    | crash          |                |
+| matplotlib (GTK3agg) | 0.414843   | 1.723030    | crash          |                |
 
 This may not be a fair comparison but gives you a sense of how they handle large dataset.
 
@@ -55,10 +55,8 @@ def draw_ezel():
 
 
 def draw_matplotlib():
-    # without manually increasing the upper limit, matplotlib crashes
-
     import matplotlib as mpl
-    mpl.rcParams['agg.path.chunksize'] = n * 10
+    mpl.rcParams['agg.path.chunksize'] = n * 10  # still crashes
 
     plt.plot(x, y)
     plt.savefig('matplotlib.png')
