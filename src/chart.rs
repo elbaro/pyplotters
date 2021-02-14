@@ -1,4 +1,3 @@
-use numpy::ShapeError;
 use plotters::prelude::*;
 use plotters::coord::types::{RangedCoordf64, RangedDateTime};
 use pyo3::prelude::*;
@@ -100,7 +99,7 @@ impl Chart {
         }
 
         if label_area.is_none() && label_area_left.is_none() && label_area_right.is_none() && label_area_top.is_none() && label_area_bottom.is_none() {
-            b.set_all_label_area_size(20);
+            b.set_left_and_bottom_label_area_size(40);
         }
 
         if let Some(v) = label_area { b.set_all_label_area_size(v); }
