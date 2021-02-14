@@ -4,7 +4,7 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 
 - fast
 - object-oriented API
-- no problem with 1_000_000 points
+- no problem with 1,000,000 points
 
 ---
 
@@ -48,7 +48,7 @@ canvas.save('ezel.png')
 
 ## vs Matplotlib
 
-|            | n=100*100            | n=1000*1000                                                 |
+|            | n = 10,000           | n = 1,000,000                                               |
 |------------|----------------------|-------------------------------------------------------------|
 | ezel       | 0.030641794204711914 | 1.5611903667449951                                          |
 | matplotlib | 0.4168715476989746   | crash even with mpl.rcParams['agg.path.chunksize'] = n * 10 |
@@ -56,7 +56,8 @@ canvas.save('ezel.png')
 This is not a fair comparison but gives you a sense of how they handle large dataset.
 
 <img src="https://github.com/elbaro/ezel/raw/main/screenshots/ezel.png" class="galleryItem" width=300px /><img src="https://github.com/elbaro/ezel/raw/main/screenshots/matplotlib.png" class="galleryItem" width=300px />
-left: Ezel / right: matplotlib
+left: Ezel with n=1,000,000
+right: matplotlib with n=1,000
 
 ```
 import time
