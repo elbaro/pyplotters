@@ -39,28 +39,35 @@ impl Series {
     pub fn dtype(&self) -> Dtype {
         match self {
             Series::EmptyPyList => unreachable!(),
+            Series::String(x) => unreachable!(),
             Series::List{dtype,..} => *dtype,
             Series::NumpyF64(..) => Dtype::F64,
             Series::NumpyF32(..) => Dtype::F32,
             Series::NumpyI64(..) => Dtype::I64,
             Series::NumpyI32(..) => Dtype::I32,
             Series::EzelDateTime(..) => Dtype::NaiveDateTime,
+            Series::EzelDate(x) => Dtype::NaiveDate,
+            Series::EzelTime(x) => Dtype::NaiveTime,
         }
     }
     pub fn len(&self, py: Python) -> usize {
         match self {
             Series::EmptyPyList => 0,
+            Series::String(x) => x.as_ref(py).len(),
             Series::List{dtype: _, list: x} => x.as_ref(py).len(),
             Series::NumpyF64(x) => x.as_ref(py).len(),
             Series::NumpyF32(x)  => x.as_ref(py).len(),
             Series::NumpyI64(x)  => x.as_ref(py).len(),
             Series::NumpyI32(x)  => x.as_ref(py).len(),
             Series::EzelDateTime(x) => x.borrow(py).len(),
+            Series::EzelDate(x) => x.borrow(py).len(),
+            Series::EzelTime(x) => x.borrow(py).len(),
         }
     }
     pub fn iter_f64<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=f64> + 'out> {
         match self {
             Series::EmptyPyList => unreachable!(),
+            Series::String(..) => unreachable!(),
             Series::List{dtype:_, list: x,..} => {
                 Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<f64>().unwrap()))
             },
@@ -69,11 +76,14 @@ impl Series {
             Series::NumpyI64(x) => Box::new(x.as_ref(py).iter().unwrap().map(|x| (*x) as f64)),
             Series::NumpyI32(x) => Box::new(x.as_ref(py).iter().unwrap().map(|x| (*x) as f64)),
             Series::EzelDateTime(_) => unreachable!(),
+            Series::EzelDate(..) => unreachable!(),
+            Series::EzelTime(..) => unreachable!(),
         }
     }
     pub fn iter_i64<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=i64> + 'out> {
         match self {
             Series::EmptyPyList => unreachable!(),
+            Series::String(..) => unreachable!(),
             // let x = x.as_ref(py);
         // let x = x.iter().map(|pyany| pyany.extract::<f64>().unwrap());
             Series::List{dtype:_, list: x,..} => {
@@ -84,11 +94,14 @@ impl Series {
             Series::NumpyI64(x) => Box::new(x.as_ref(py).iter().unwrap().map(|x| *x)),
             Series::NumpyI32(x) => Box::new(x.as_ref(py).iter().unwrap().map(|x| (*x) as i64)),
             Series::EzelDateTime(_) => unreachable!(),
+            Series::EzelDate(..) => unreachable!(),
+            Series::EzelTime(..) => unreachable!(),
         }
     }
     pub fn iter_datetime<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=chrono::NaiveDateTime> + 'out> {
         match self {
             Series::EmptyPyList => unreachable!(),
+            Series::String(..) => unreachable!(),
             // let x = x.as_ref(py);
             // let x = x.iter().map(|pyany| pyany.extract::<f64>().unwrap());
             Series::List{dtype: Dtype::NaiveDateTime, list, ..} => {
@@ -105,18 +118,22 @@ impl Series {
                 let dt = dt.borrow(py);
                 Box::new(IterDateTime::new(dt))
             }
+            Series::EzelDate(..) => unreachable!(),
+            Series::EzelTime(..) => unreachable!(),
         }
     }
     pub fn iter_str<'a: 'out, 'py: 'out, 'out>(&'a self, py:Python<'py>) -> Box<dyn Iterator<Item=&'out str> + 'out> {
         match self {
             Series::EmptyPyList => unreachable!(),
-            Series::String(x) => Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<PyString>().unwrap().to_str().unwrap())),
+            Series::String(x) => Box::new(x.as_ref(py).iter().map(|pyany| pyany.extract::<&PyString>().unwrap().to_str().unwrap())),
             Series::List{..} => unreachable!(),
             Series::NumpyF64(..) => unreachable!(),
             Series::NumpyF32(..) => unreachable!(),
             Series::NumpyI64(..) => unreachable!(),
             Series::NumpyI32(..) => unreachable!(),
-            Series::EzelDateTime(dt) => unreachable!(),
+            Series::EzelDateTime(..) => unreachable!(),
+            Series::EzelDate(..) => unreachable!(),
+            Series::EzelTime(..) => unreachable!(),
         }
     }
 }

@@ -8,13 +8,15 @@ mod dtype;
 mod datetime;
 mod help;
 
+use help::module as help_pymodule;
+
 use backend::Backend;
 use canvas::Canvas;
 use chart::Chart;
 use range::Range;
 use series::Series;
 use dtype::Dtype;
-use datetime::DateTime;
+use datetime::{DateTime, Date, Time};
 
 use pyo3::prelude::*;
 
@@ -24,7 +26,7 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
     // m.add_function(pyo3::wrap_pyfunction!(count, m)?).unwrap();
     // m.add_class()
 
-    m.add_submodule(pyo3::wrap_pymodule!(help::module));
+    // m.add_wrapped(pyo3::wrap_pymodule!(help_pymodule));
 
     // class list
     m.add_class::<Canvas>()?;
@@ -36,17 +38,17 @@ fn ezel(_py: Python, m: &PyModule) -> PyResult<()> {
 }
 
 
-#[cfg(test)]
-mod tests {
-    use pyo3::prelude::*;
+// #[cfg(test)]
+// mod tests {
+//     use pyo3::prelude::*;
     
-    #[test]
-    fn it_works() {
-        pyo3::Python::with_gil(|py| {
-            let list = pyo3::types::PyList::new(py, &[4, 1, 8, 5, 6, 2, 7, 3]);
-            let canvas = Py::new(py, crate::Canvas::new(Some(400), Some(300))).unwrap();
-            let chart = crate::Chart::new(canvas);
-            // chart.line(pyo3::types::PyList::new(py, &[1,2,3]).extract::<Series>(), pyo3::types::PyList::new(py, &[3,2,1]).into());
-        })
-    }
-}
+//     #[test]
+//     fn it_works() {
+//         pyo3::Python::with_gil(|py| {
+//             let list = pyo3::types::PyList::new(py, &[4, 1, 8, 5, 6, 2, 7, 3]);
+//             let canvas = Py::new(py, crate::Canvas::new(Some(400), Some(300))).unwrap();
+//             let chart = crate::Chart::new(canvas);
+//             // chart.line(pyo3::types::PyList::new(py, &[1,2,3]).extract::<Series>(), pyo3::types::PyList::new(py, &[3,2,1]).into());
+//         })
+//     }
+// }
