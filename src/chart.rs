@@ -350,8 +350,9 @@ impl Chart {
                 .unwrap();
             }
         }
+        Ok(())
     }
-    Ok(())
+    
 
     /// x and y accepts a native Python list or a 1D numpy.ndarray.
     /// _color parameter is not implemented yet.
