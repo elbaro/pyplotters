@@ -1,6 +1,6 @@
 # Ezel
 
-A Python plotting library written in Rust using [plotters](https://github.com/38/plotters).
+A Python/Rust plotting library written in Rust using [plotters](https://github.com/38/plotters).
 
 - fast
 - object-oriented API
@@ -8,8 +8,8 @@ A Python plotting library written in Rust using [plotters](https://github.com/38
 
 ---
 
-- Guide
-- [API Reference](https://elbaro.github.io/ezel/)
+- [(WIP) Guide](https://elbaro.github.io/ezel/guide)
+- [API Reference](https://elbaro.github.io/ezel/api)
 - Benchmarks
 
 ## vs Matplotlib
@@ -106,8 +106,9 @@ canvas.save('ezel.png')
 ```
 
 
-## Roadmap for 0.1.x
-Currently only numeric scalars are supported.
+## Roadmap for 0.1.x - Painting API (Canvas/Chart)
+Canvas defines a fixed drawing area and Chart draws primitives on it.
+All drawing APIs are imperative.
 
 - [x] Draw x, y axis and grid by default
 - [x] Accept a Python list as an argument
@@ -119,11 +120,13 @@ Currently only numeric scalars are supported.
 - [x] line, scatter style customization (except color)
 - [x] Axis layout customization
 - [x] Label layout customization
+- [x] Python docs
 - [ ] Histogram
-- [ ] Python docs
-- [ ] Better default layout
 
-## Roadmap for 0.2.0
+## Roadmap for 0.2.x - Presentation API (Frame)
+In 0.2.x, title/axis functions are extracted from a Chart API to a presentation layer.
+
+- [ ] Better default layout
 - [ ] Axis style customization
 - [ ] Label style customization
 - [ ] intergrate with colorous crate and allow color strings
@@ -136,3 +139,9 @@ Currently only numeric scalars are supported.
 - [ ] Support Pandas/PyPolars DataFrames/Series
 - [ ] Static Build
 - [ ] Jupyter Notebook Intergration
+- [ ] Interactive Jupyter widget / html similar to Bokeh.
+
+## Roadmap for 0.3.x - Abstract API (Motive)
+The highest API that defines data representations.
+The API retains the user data and infer the axis range.
+This will be available as a Rust library as well.

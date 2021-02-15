@@ -25,8 +25,13 @@ jobs:
             default: true
             override: true
             components: rustfmt, clippy
-      - name: Build .so and docs
-        run: cargo build && mv target/debug/libezel.so ezel.so && pdoc3 --force --html -o pages ezel.so && mv pages/ezel.html pages/index.html
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: 'latest'
+      - run: mkdir pages
+      - run: mdbook build guide && mv guide/book pages/guide
+      - run: cargo build && mv target/debug/libezel.so ezel.so && pdoc3 --force --html -o pdoc_pages ezel.so && mkdir pages/api && mv pdoc_pages/ezel.html pages/api/index.html
       - name: Deploy to GitHub Pages
         if: success()
         uses: crazy-max/ghaction-github-pages@v2

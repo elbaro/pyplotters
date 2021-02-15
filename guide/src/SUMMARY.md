@@ -2,5 +2,8 @@
 
 - [Why Ezel](./why_ezel.md)
 - [Concepts](./concepts.md)
-- [Basic Code Example](./basic_code_example.md)
-- [Data Types](./types.md)
+- [Canvas/Chart API](#)
+    - [Data Types](./types.md)
+    - [Code Example](./basic_code_example.md)
+- [Frame API](#)
+- [Declarative API](#)
